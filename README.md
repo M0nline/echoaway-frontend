@@ -1,75 +1,94 @@
-# Nuxt Minimal Starter
+# EchoAway Frontend
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Application Vue3 + Quasar pour EchoAway - Projet RNCP
 
-## Setup
+## Stack Technique
 
-Make sure to install dependencies:
+- **Vue 3** avec Composition API
+- **Quasar Framework** pour l'interface utilisateur
+- **Vite** comme bundler et serveur de développement
+- **TypeScript** pour le typage
+- **Pinia** pour la gestion d'état
+- **Vue Router** pour la navigation
+
+## Installation
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## Développement
 
 ```bash
-# npm
+# Serveur de développement
 npm run dev
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+# L'application sera accessible sur http://localhost:3000
 ```
 
-## Production
-
-Build the application for production:
+## Build Production
 
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
+## Preview Production
 
 ```bash
-# npm
 npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Structure du projet
+
+```
+echoaway-frontend/
+├── src/
+│   ├── views/              # Pages de l'application
+│   │   ├── HomeView.vue
+│   │   └── AccommodationsView.vue
+│   ├── router/             # Configuration des routes
+│   │   └── index.ts
+│   ├── App.vue            # Composant racine
+│   ├── main.ts            # Point d'entrée
+│   └── quasar-variables.scss # Variables Quasar
+├── public/                # Assets statiques
+├── Dockerfile
+└── package.json
+```
+
+## Routes
+
+- `/` - Page d'accueil
+- `/accommodations` - Gestion des hébergements
+
+## Variables d'environnement
+
+```env
+VITE_API_URL=http://localhost:3001
+```
+
+## Docker
+
+```bash
+# Build de l'image
+docker build -t echoaway-frontend .
+
+# Exécution
+docker run -p 3000:3000 echoaway-frontend
+```
+
+## Scripts disponibles
+
+- `npm run dev` - Serveur de développement Vite
+- `npm run build` - Build de production
+- `npm run preview` - Preview du build de production
+- `npm run lint` - Linting du code
+- `npm run format` - Formatage du code avec Prettier
+
+## Configuration Vite
+
+Le projet utilise Vite avec :
+- Proxy API vers le backend (`/api` → `http://localhost:3001`)
+- Support TypeScript
+- Intégration Quasar
+- Hot Module Replacement (HMR)
