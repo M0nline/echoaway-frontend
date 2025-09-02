@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { requireAuth, requireGuest, requireRole } from './guards'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,9 +11,28 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+      beforeEnter: requireGuest
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue'),
+      beforeEnter: requireGuest
+    },
+    {
       path: '/accommodations',
       name: 'accommodations',
-      component: () => import('../views/AccommodationsView.vue')
+      component: () => import('../views/AccommodationsView.vue'),
+      beforeEnter: requireAuth
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/ProfileView.vue'),
+      beforeEnter: requireAuth
     }
   ]
 })
