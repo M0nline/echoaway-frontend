@@ -4,6 +4,10 @@
   "description": "Frontend Vue3 + Quasar for EchoAway - RNCP Project",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

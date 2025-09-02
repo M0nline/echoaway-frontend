@@ -1,22 +1,83 @@
 # EchoAway Frontend
 
-Application Vue3 + Quasar pour EchoAway - Projet RNCP
+Vue3 + Quasar application for EchoAway
 
-## 🏗️ Architecture du projet
+## 🏗️ Project Architecture
 
-Ce projet fait partie d'une architecture **multi-repositories** avec :
-- **Frontend** : Application Vue3/Quasar avec Vite (ce repository)
-- **Backend** : API NestJS avec TypeORM et PostgreSQL (repository séparé)
-- **Déploiement** : Vercel (frontend) + Railway (backend)
+This project is part of a **multi-repositories** architecture with:
+- **Frontend** : Vue3/Quasar application with Vite (this repository)
+- **Backend** : NestJS API with TypeORM and PostgreSQL (separate repository)
+- **Deployment** : Vercel (frontend) + Railway (backend)
 
-## Stack Technique
+## Technical Stack Frontend
 
-- **Vue 3** avec Composition API
-- **Quasar Framework** pour l'interface utilisateur
-- **Vite** comme bundler et serveur de développement
-- **TypeScript** pour le typage
-- **Pinia** pour la gestion d'état
-- **Vue Router** pour la navigation
+- **Vue 3** with Composition API
+- **Quasar Framework** for user interface
+- **Vite** as bundler and development server
+- **TypeScript** for typing
+- **Pinia** for state management
+- **Vue Router** for navigation
+
+## 🚀 Application Launch
+
+**⚠️ IMPORTANT: This repository does NOT contain the main docker-compose file.**
+
+*To launch the complete application locally, you need to clone BOTH repositories.*
+
+### Prerequisites
+- Docker and Docker Compose installed
+- Ports 3001 (backend) and 5432 (database) available
+- Node.js 18+ (recommended: use NVM for version management)
+- Git for cloning repositories
+- **SSH key configured** for GitHub access
+
+### Node.js Version Management (NVM)
+```bash
+# Install NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+# Use the project's Node.js version (automatically detected)
+nvm install
+nvm use
+```
+
+### SSH Configuration
+**Ask a team member with repository access to add your SSH key to the GitHub repositories.**
+
+### Quick Start
+```bash
+# 1. Clone the backend repository (contains the main docker-compose)
+git clone git@github.com:username/echoaway-backend.git
+cd echoaway-backend
+
+# 2. Clone the frontend repository in the same parent folder
+git clone git@github.com:username/echoaway-frontend.git ../echoaway-frontend
+
+# 3. Launch backend and database from the backend folder
+docker-compose up -d
+
+# 4. Launch frontend in development mode
+cd ../echoaway-frontend
+npm install
+npm run dev
+
+# The application will be accessible on:
+# - Frontend: http://localhost:3000 (npm run dev)
+# - Backend API: http://localhost:3001
+# - Database: localhost:5432
+```
+
+### Folder Structure
+```
+echoaway-app/
+├── echoaway-backend/          # Backend repository (contains docker-compose.yml)
+│   ├── docker-compose.yml     # Backend + DB only
+│   ├── Dockerfile
+│   └── src/
+└── echoaway-frontend/         # This repository
+    ├── package.json
+    └── src/
+```
 
 ## Installation
 
@@ -24,183 +85,117 @@ Ce projet fait partie d'une architecture **multi-repositories** avec :
 npm install
 ```
 
-## Développement
+## Development
 
 ```bash
-# Serveur de développement
+# Development server
 npm run dev
 
-# L'application sera accessible sur http://localhost:3000
+# The application will be accessible on http://localhost:3000
 ```
 
-## Build Production
+## Production Build
 
 ```bash
 npm run build
 ```
 
-## Preview Production
+## Production Preview
 
 ```bash
 npm run preview
 ```
 
-## Structure du projet
+## Project Structure
 
 ```
 echoaway-frontend/
 ├── src/
-│   ├── views/                    # Pages de l'application
-│   ├── router/                   # Configuration des routes
-│   ├── stores/                   # Gestion d'état Pinia
-│   ├── services/                 # Services API
+│   ├── views/                    # Application pages
+│   ├── router/                   # Route configuration
+│   ├── stores/                   # Pinia state management
+│   ├── services/                 # API services
 │   ├── config/                   # Configuration
-│   ├── App.vue                  # Composant racine
-│   ├── main.ts                  # Point d'entrée
-│   └── quasar-variables.scss    # Variables Quasar
-├── public/                       # Assets statiques
+│   ├── App.vue                  # Root component
+│   ├── main.ts                  # Entry point
+│   └── quasar-variables.scss    # Quasar variables
+├── public/                       # Static assets
 ├── Dockerfile
-├── docker-compose.yml            # Développement local
 ├── env.example
 └── package.json
 ```
 
-## Variables d'environnement
+## Environment Variables
 
-1. Copier le fichier d'exemple :
+1. Copy the example file:
 ```bash
 cp env.example .env
 ```
 
-2. Modifier le fichier `.env` avec vos valeurs :
+2. Modify the `.env` file with your values:
 ```env
 VITE_API_URL=http://localhost:3001
 ```
 
-## Configuration API
+## API Configuration
 
-Le projet utilise un service API centralisé (`src/services/api.ts`) qui :
-- Gère l'URL de l'API via `VITE_API_URL`
-- Configure les headers d'authentification
-- Gère les erreurs de manière centralisée
-- Supporte les environnements de développement et production
+The project uses a centralized API service (`src/services/api.ts`) that:
+- Manages API URL via `VITE_API_URL`
+- Configures authentication headers
+- Handles errors centrally
+- Supports development and production environments
 
-## 🚀 Lancement de l'application
+## 🚀 Production Deployment
 
-**⚠️ IMPORTANT : Ce repository ne contient PAS le docker-compose principal.**
+### Platforms Used
+- **Frontend** : Vercel (automatic deployment from Git)
+- **Backend** : Railway (automatic deployment from Git)
+- **Database** : Railway PostgreSQL
 
-**Pour lancer l'application complète en local, vous devez cloner les DEUX repositories :**
+## Available Scripts
 
-```bash
-# 1. Cloner le repository backend (contient le docker-compose principal)
-git clone <url-echoaway-backend>
-cd echoaway-backend
+- `npm run dev` - Vite development server
+- `npm run build` - Production build
+- `npm run preview` - Production build preview
+- `npm run lint` - Code linting
+- `npm run format` - Code formatting with Prettier
 
-# 2. Cloner le repository frontend dans le même dossier parent
-git clone <url-echoaway-frontend> ../echoaway-frontend
+## Vite Configuration
 
-# 3. Lancer l'application complète depuis le backend
-docker-compose up -d
-
-# L'application sera accessible sur :
-# - Frontend : http://localhost:3000
-# - Backend API : http://localhost:3001
-```
-
-### Structure des dossiers
-```
-echoaway-app/
-├── echoaway-backend/          # Repository backend (contient docker-compose.yml)
-│   ├── docker-compose.yml
-│   ├── Dockerfile
-│   └── src/
-└── echoaway-frontend/         # Ce repository
-    ├── Dockerfile
-    └── src/
-```
-
-## 🚀 Déploiement en production
-
-### Plateformes utilisées
-- **Frontend** : Vercel (déploiement automatique depuis Git)
-- **Backend** : Railway (déploiement automatique depuis Git)
-- **Base de données** : Railway PostgreSQL
-
-### Configuration Vercel
-1. Connecter le repository GitHub à Vercel
-2. Configurer les variables d'environnement
-3. Déploiement automatique à chaque push
-
-## Docker
-
-```bash
-# Build de l'image
-docker build -t echoaway-frontend .
-
-# Exécution
-docker run -p 3000:3000 echoaway-frontend
-```
-
-## Scripts disponibles
-
-- `npm run dev` - Serveur de développement Vite
-- `npm run build` - Build de production
-- `npm run preview` - Preview du build de production
-- `npm run lint` - Linting du code
-- `npm run format` - Formatage du code avec Prettier
-
-## Configuration Vite
-
-Le projet utilise Vite avec :
-- Support TypeScript
-- Intégration Quasar
+The project uses Vite with:
+- TypeScript support
+- Quasar integration
 - Hot Module Replacement (HMR)
-- Variables d'environnement via `VITE_*`
-- Build optimisé pour production
+- Environment variables via `VITE_*`
+- Production optimized build
 
 ## Architecture
 
-### Composants
-- **Views** : Pages principales de l'application
-- **Stores** : Gestion d'état centralisée avec Pinia
-- **Services** : Logique métier et appels API
-- **Router** : Navigation et protection des routes
+### Components
+- **Views** : Main application pages
+- **Stores** : Centralized state management with Pinia
+- **Services** : Business logic and API calls
+- **Router** : Navigation and route protection
 
-### État de l'application
-- **AuthStore** : Gestion de l'authentification
-- **Token JWT** : Stockage sécurisé des sessions
-- **User** : Informations de l'utilisateur connecté
+### Application State
+- **AuthStore** : Authentication management
+- **JWT Token** : Secure session storage
+- **User** : Connected user information
 
-### Sécurité
-- **Guards** : Protection des routes sensibles
-- **Validation** : Vérification des données d'entrée
-- **CORS** : Configuration pour la communication backend
+### Security
+- **Guards** : Sensitive route protection
+- **Validation** : Input data verification
+- **CORS** : Backend communication configuration
 
-## Développement
+## Development
 
-### Ajout de nouvelles fonctionnalités
-1. Créer la vue dans `src/views/`
-2. Ajouter la route dans `src/router/index.ts`
-3. Implémenter la logique dans le store approprié
-4. Tester avec l'API backend
+### Adding New Features
+1. Create the view in `src/views/`
+2. Add the route in `src/router/index.ts`
+3. Implement logic in the appropriate store
+4. Test with backend API
 
-### Styles et UI
-- **Quasar** : Composants UI prêts à l'emploi
-- **SCSS** : Variables et mixins personnalisés
-- **Responsive** : Design adaptatif mobile/desktop
-
-## 🔗 Liens utiles
-
-- **Repository Backend** : [echoaway-backend](<url-backend>)
-- **Documentation Vue 3** : https://vuejs.org/
-- **Documentation Quasar** : https://quasar.dev/
-- **Documentation Vite** : https://vitejs.dev/
-- **Vercel** : https://vercel.com/
-- **Railway** : https://railway.app/
-
-## 📚 Documentation complète
-
-Pour une vue d'ensemble complète du projet, consultez la documentation de chaque composant :
-- **Frontend** : Ce README
-- **Backend** : README du repository backend
-- **Déploiement** : Configuration Vercel et Railway
+### Styles and UI
+- **Quasar** : Ready-to-use UI components
+- **SCSS** : Custom variables and mixins
+- **Responsive** : Mobile/desktop adaptive design
