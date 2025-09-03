@@ -25,8 +25,7 @@ const router = createRouter({
     {
       path: '/accommodations',
       name: 'accommodations',
-      component: () => import('../views/AccommodationsView.vue'),
-      beforeEnter: requireAuth
+      component: () => import('../views/AccommodationsView.vue')
     },
     {
       path: '/profile',
