@@ -9,6 +9,15 @@ import App from './App.vue'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
 
+// Import des variables SCSS personnalisées
+import './quasar-variables.scss'
+
+// Import des styles globaux du design system
+import './styles/design-system.css'
+
+// Import de la configuration du design system
+import { quasarConfig } from './config/design-system'
+
 const app = createApp(App)
 const pinia = createPinia()
 
@@ -20,7 +29,8 @@ app.use(router)
 app.use(Quasar, {
   plugins: {
     Notify
-  }
+  },
+  config: quasarConfig
 })
 
 app.mount('#app') 

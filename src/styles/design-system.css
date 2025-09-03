@@ -1,0 +1,139 @@
+/* Design System EchoAway - Styles globaux */
+
+:root {
+  /* Variables CSS personnalisées */
+  --echoaway-primary: #006D77;
+  --echoaway-secondary: #83C5BE;
+  --echoaway-accent: #E29578;
+  --echoaway-dark: #006D77;
+  --echoaway-dark-page: #EDF6F9;
+  --echoaway-positive: #21BA45;
+  --echoaway-negative: #C10015;
+  --echoaway-info: #31CCEC;
+  --echoaway-warning: #F2C037;
+}
+
+/* Styles globaux pour les cartes */
+.design-system-card {
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.design-system-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 109, 119, 0.15);
+}
+
+.design-system-card--elevated {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Styles globaux pour les boutons */
+.design-system-btn--primary {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.design-system-btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 109, 119, 0.3);
+}
+
+.design-system-btn--secondary {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.design-system-btn--outline {
+  border-radius: 8px;
+  font-weight: 500;
+  border: 2px solid var(--echoaway-primary);
+}
+
+/* Styles globaux pour les formulaires */
+.design-system-input,
+.design-system-select {
+  border-radius: 8px;
+}
+
+.design-system-label {
+  font-weight: 500;
+  color: var(--echoaway-dark);
+}
+
+/* Amélioration des composants Quasar existants */
+.q-card {
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.q-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.q-btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.q-btn:hover {
+  transform: translateY(-1px);
+}
+
+.q-input,
+.q-select {
+  border-radius: 8px;
+}
+
+.q-chip {
+  border-radius: 16px;
+  font-weight: 500;
+}
+
+/* Espacements cohérents */
+.design-system-spacing-xs { margin: 4px; padding: 4px; }
+.design-system-spacing-sm { margin: 8px; padding: 8px; }
+.design-system-spacing-md { margin: 16px; padding: 16px; }
+.design-system-spacing-lg { margin: 24px; padding: 24px; }
+.design-system-spacing-xl { margin: 32px; padding: 32px; }
+
+/* Transitions cohérentes */
+.design-system-transition-fast { transition: all 0.15s ease; }
+.design-system-transition-normal { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.design-system-transition-slow { transition: all 0.5s ease; }
+
+/* Responsive design */
+@media (max-width: 599px) {
+  .design-system-card {
+    border-radius: 8px;
+  }
+  
+  .q-card {
+    border-radius: 8px;
+  }
+}
+
+/* Amélioration de l'accessibilité */
+.q-input:focus-within,
+.q-select:focus-within,
+.q-btn:focus {
+  outline: 2px solid var(--echoaway-primary);
+  outline-offset: 2px;
+}
+
+/* Styles pour les messages d'erreur */
+.error-message {
+  color: var(--echoaway-negative);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Labels obligatoires */
+.required-field::after {
+  content: " *";
+  color: var(--echoaway-negative);
+  font-weight: bold;
+}
