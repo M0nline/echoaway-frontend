@@ -6,10 +6,12 @@
         <div class="logo">ECHOAWAY</div>
         <nav class="nav">
           <a href="#" class="nav-link">Séjours</a>
-          <a href="#" class="nav-link">Hébergements</a>
+          <router-link to="/accommodations" class="nav-link">Hébergements</router-link>
           <a href="#" class="nav-link">Loisirs</a>
         </nav>
-        <q-btn color="dark" label="Connexion" class="login-btn" />
+        <router-link to="/login">
+          <q-btn color="dark" label="Connexion" class="login-btn" />
+        </router-link>
       </div>
     </header>
 
@@ -181,6 +183,19 @@ onMounted(() => {
 }
 
 .nav-link:hover {
+  color: #83C5BE;
+}
+
+/* Styles pour router-link */
+.nav a,
+.nav router-link {
+  text-decoration: none;
+  color: #006D77;
+  font-weight: 500;
+}
+
+.nav a:hover,
+.nav router-link:hover {
   color: #83C5BE;
 }
 
