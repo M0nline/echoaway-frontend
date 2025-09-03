@@ -89,15 +89,16 @@
                 :key="accommodation.id"
                 class="col-12 col-xl-3 col-lg-4 col-md-6"
               >
-                <q-card class="accommodation-card">
+                <q-card class="accommodation-card design-system-card">
                   <q-card-section>
-                    <div class="text-h6">{{ accommodation.name }}</div>
-                    <div class="text-subtitle2 text-grey-6">{{ accommodation.location }}</div>
-                    <div class="q-mt-sm">
+                    <div class="text-h6 text-weight-medium">{{ accommodation.name }}</div>
+                    <div class="text-subtitle2 text-grey-6 q-mt-xs">{{ accommodation.location }}</div>
+                    <div class="q-mt-md">
                       <q-chip 
                         :color="getConnectivityColor(accommodation.connectivity)"
                         text-color="white"
                         size="sm"
+                        class="q-mr-xs"
                       >
                         {{ accommodation.connectivity }}
                       </q-chip>
@@ -105,15 +106,14 @@
                         color="secondary" 
                         text-color="white"
                         size="sm"
-                        class="q-ml-xs"
                       >
                         {{ accommodation.type }}
                       </q-chip>
                     </div>
-                    <div v-if="accommodation.pricePerNight" class="text-h6 text-primary q-mt-sm">
+                    <div v-if="accommodation.pricePerNight" class="text-h6 text-primary q-mt-md">
                       {{ accommodation.pricePerNight }}€ / nuit
                     </div>
-                    <div v-if="accommodation.description" class="text-body2 q-mt-sm">
+                    <div v-if="accommodation.description" class="text-body2 q-mt-sm text-grey-7">
                       {{ accommodation.description }}
                     </div>
                   </q-card-section>
@@ -123,12 +123,14 @@
                       flat 
                       color="primary" 
                       icon="edit"
+                      size="sm"
                       @click="editAccommodation(accommodation)"
                     />
                     <q-btn 
                       flat 
                       color="negative" 
                       icon="delete"
+                      size="sm"
                       @click="deleteAccommodation(accommodation.id)"
                     />
                   </q-card-actions>
@@ -141,212 +143,13 @@
     </div>
 
     <!-- Dialog de création/édition -->
-    <q-dialog v-model="showCreateDialog" persistent>
-      <q-card style="min-width: 400px">
-        <q-card-section>
-          <div class="text-h6">
-            {{ editingAccommodation ? 'Modifier' : 'Créer' }} un hébergement
-          </div>
-        </q-card-section>
-
-        <q-card-section>
-          <div class="text-body2 text-grey-7 q-mb-md">
-            <q-icon name="info" size="sm" class="q-mr-xs" />
-            Tous les champs sont obligatoires sauf ceux indiqués comme optionnels.
-          </div>
-          <q-form @submit="saveAccommodation" class="q-gutter-md">
-            <q-input
-              v-model="form.name"
-              label="Titre de l'hébergement"
-              outlined
-              :rules="[val => !!val || 'Le titre est obligatoire']"
-              aria-required="true"
-              aria-describedby="name-error"
-              hint="Ex: Chalet des Alpes, Maison de campagne, etc."
-            />
-            <div id="name-error" class="sr-only" v-if="errors.name">
-              Erreur: {{ errors.name }}
-            </div>
-
-            <q-input
-              v-model="form.address"
-              label="Adresse complète"
-              outlined
-              :rules="[val => !!val || 'L\'adresse est obligatoire']"
-              aria-required="true"
-              aria-describedby="address-error"
-              hint="Numéro et nom de rue"
-            />
-            <div id="address-error" class="sr-only" v-if="errors.address">
-              Erreur: {{ errors.address }}
-            </div>
-
-            <div class="row q-col-gutter-md">
-              <div class="col-6">
-                                  <q-input
-                    v-model="form.postalCode"
-                    label="Code postal"
-                    outlined
-                    :rules="[val => !!val || 'Le code postal est obligatoire']"
-                    aria-required="true"
-                    aria-describedby="postal-error"
-                    hint="Ex: 75001"
-                  />
-                <div id="postal-error" class="sr-only" v-if="errors.postalCode">
-                  Erreur: {{ errors.postalCode }}
-                </div>
-              </div>
-              <div class="col-6">
-                <q-input
-                  v-model="form.city"
-                  label="Ville *"
-                  outlined
-                  :rules="[val => !!val || 'La ville est obligatoire']"
-                  aria-required="true"
-                  aria-describedby="city-error"
-                  hint="Ex: Paris"
-                />
-                <div id="city-error" class="sr-only" v-if="errors.city">
-                  Erreur: {{ errors.city }}
-                </div>
-              </div>
-            </div>
-
-            <q-select
-              v-model="form.type"
-              :options="typeOptions"
-              label="Type d'hébergement"
-              outlined
-              :rules="[val => !!val || 'Le type est obligatoire']"
-              aria-required="true"
-              aria-describedby="type-error"
-              hint="Sélectionnez le type qui correspond le mieux"
-            />
-            <div id="type-error" class="sr-only" v-if="errors.type">
-              Erreur: {{ errors.type }}
-            </div>
-
-            <q-select
-              v-model="form.connectivity"
-              :options="connectivityOptions"
-              label="Zone de connectivité"
-              outlined
-              aria-describedby="connectivity-hint"
-              hint="Niveau de réseau disponible sur place"
-            />
-            <div id="connectivity-hint" class="sr-only">
-              Zone blanche: pas de réseau, Zone grise: réseau limité, Autre: réseau disponible
-            </div>
-
-            <div class="row q-col-gutter-md">
-              <div class="col-6">
-                <q-input
-                  v-model.number="form.priceMinPerNight"
-                  label="Prix minimum par nuit (€)"
-                  type="number"
-                  outlined
-                  min="0"
-                  step="0.01"
-                  hint="Format: 0 000,00"
-                  aria-describedby="price-min-hint"
-                />
-                <div id="price-min-hint" class="sr-only">
-                  Prix minimum pour une nuit, en euros
-                </div>
-              </div>
-              <div class="col-6">
-                <q-input
-                  v-model.number="form.priceMaxPerNight"
-                  label="Prix maximum par nuit (€)"
-                  type="number"
-                  outlined
-                  min="0"
-                  step="0.01"
-                  hint="Format: 0 000,00"
-                  aria-describedby="price-max-hint"
-                />
-                <div id="price-max-hint" class="sr-only">
-                  Prix maximum pour une nuit, en euros
-                </div>
-              </div>
-            </div>
-
-            <q-input
-              v-model.number="form.numberOfBeds"
-              label="Nombre de couchages"
-              type="number"
-              outlined
-              min="1"
-              max="20"
-              hint="Nombre de personnes que peut accueillir l'hébergement"
-              aria-describedby="beds-hint"
-            />
-            <div id="beds-hint" class="sr-only">
-              Capacité d'accueil de l'hébergement
-            </div>
-
-            <q-input
-              v-model="form.description"
-              label="Description de l'hébergement"
-              type="textarea"
-              outlined
-              rows="3"
-              hint="Décrivez votre hébergement, ses particularités, etc."
-              aria-describedby="description-hint"
-            />
-            <div id="description-hint" class="sr-only">
-              Détails et caractéristiques de votre hébergement
-            </div>
-
-            <div class="text-subtitle2 text-grey-7 q-mb-sm">
-              Contact de réservation (lien OU téléphone obligatoire)
-            </div>
-            
-            <div class="row q-col-gutter-md">
-              <div class="col-6">
-                <q-input
-                  v-model="form.bookingLink"
-                  label="Lien de réservation"
-                  type="url"
-                  outlined
-                  hint="URL de votre site de réservation"
-                  aria-describedby="booking-hint"
-                />
-                <div id="booking-hint" class="sr-only">
-                  Lien vers votre système de réservation
-                </div>
-              </div>
-              <div class="col-6">
-                <q-input
-                  v-model="form.phoneNumber"
-                  label="Numéro de téléphone"
-                  type="tel"
-                  outlined
-                  hint="Numéro pour réservation par téléphone"
-                  aria-describedby="phone-hint"
-                />
-                <div id="phone-hint" class="sr-only">
-                  Numéro de téléphone pour les réservations
-                </div>
-              </div>
-            </div>
-            
-            <div v-if="errors.bookingContact" class="text-negative text-caption q-mt-sm">
-              {{ errors.bookingContact }}
-            </div>
-          </q-form>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Annuler" @click="closeDialog" />
-          <q-btn 
-            color="primary" 
-            :label="editingAccommodation ? 'Modifier' : 'Créer'"
-            @click="saveAccommodation"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <AccommodationDialog
+      v-model="showCreateDialog"
+      :accommodation="editingAccommodation"
+      :loading="loading"
+      @submit="saveAccommodation"
+      @cancel="closeDialog"
+    />
   </q-page>
 </template>
 
@@ -355,6 +158,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth'
 import { apiService } from '../services/api'
+import AccommodationDialog from '../components/AccommodationDialog.vue'
 
 // Types
 interface Accommodation {
@@ -386,41 +190,7 @@ const filters = reactive({
   type: null as string | null
 })
 
-const form = reactive({
-  name: '',
-  address: '',
-  postalCode: '',
-  city: '',
-  type: '',
-  connectivity: 'Zone blanche' as 'Zone blanche' | 'Zone grise' | 'Autre',
-  priceMinPerNight: undefined as number | undefined,
-  priceMaxPerNight: undefined as number | undefined,
-  numberOfBeds: undefined as number | undefined,
-  description: '',
-  bookingLink: '',
-  phoneNumber: ''
-})
-
-const errors = reactive({
-  name: '',
-  address: '',
-  postalCode: '',
-  city: '',
-  type: '',
-  bookingContact: ''
-})
-
-// Validation personnalisée pour le contact de réservation
-const validateBookingContact = () => {
-  if (!form.bookingLink && !form.phoneNumber) {
-    errors.bookingContact = 'Un lien de réservation ou un numéro de téléphone est obligatoire'
-    return false
-  }
-  errors.bookingContact = ''
-  return true
-}
-
-// Options pour les selects
+// Options pour les selects (utilisées par le composant AccommodationForm)
 const connectivityOptions = [
   { label: 'Zone blanche', value: 'Zone blanche' },
   { label: 'Zone grise', value: 'Zone grise' },
@@ -456,22 +226,13 @@ const loadAccommodations = async () => {
   }
 }
 
-const saveAccommodation = async () => {
-  // Validation du contact de réservation
-  if (!validateBookingContact()) {
-    $q.notify({
-      type: 'warning',
-      message: 'Veuillez remplir au moins un contact de réservation'
-    })
-    return
-  }
-
+const saveAccommodation = async (formData: any) => {
   try {
     if (editingAccommodation.value) {
       // Mise à jour
       await apiService.updateAccommodation(
         editingAccommodation.value.id, 
-        form
+        formData
       )
       $q.notify({
         type: 'positive',
@@ -479,7 +240,7 @@ const saveAccommodation = async () => {
       })
     } else {
       // Création
-      await apiService.createAccommodation(form)
+      await apiService.createAccommodation(formData)
       $q.notify({
         type: 'positive',
         message: 'Hébergement créé avec succès'
@@ -499,7 +260,6 @@ const saveAccommodation = async () => {
 
 const editAccommodation = (accommodation: Accommodation) => {
   editingAccommodation.value = accommodation
-  Object.assign(form, accommodation)
   showCreateDialog.value = true
 }
 
@@ -531,15 +291,6 @@ const deleteAccommodation = async (id: string) => {
 const closeDialog = () => {
   showCreateDialog.value = false
   editingAccommodation.value = null
-  Object.assign(form, {
-    name: '',
-    location: '',
-    type: '',
-    connectivity: 'None',
-    pricePerNight: undefined,
-    numberOfRooms: undefined,
-    description: ''
-  })
 }
 
 const getConnectivityColor = (connectivity: string) => {
