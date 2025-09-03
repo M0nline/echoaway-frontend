@@ -8,9 +8,9 @@ interface EnvironmentConfig {
   isProduction: boolean
 }
 
-// Configuration par défaut (développement local)
+// Configuration par défaut (développement local avec proxy Vite)
 const defaultConfig: EnvironmentConfig = {
-  apiUrl: 'http://localhost:3001',
+  apiUrl: '', // Utilise le proxy Vite en développement
   isDevelopment: true,
   isProduction: false,
 }
@@ -31,7 +31,7 @@ export const config: EnvironmentConfig = isProduction ? productionConfig : defau
 // Logs de configuration (seulement en développement)
 if (config.isDevelopment) {
   console.log('🔧 Environment Configuration:', {
-    apiUrl: config.apiUrl,
+    apiUrl: config.apiUrl || 'Proxy Vite (développement)',
     environment: config.isProduction ? 'production' : 'development',
     viteMode: import.meta.env.MODE,
     nodeEnv: import.meta.env.VITE_NODE_ENV
@@ -45,6 +45,12 @@ export const IS_PRODUCTION = config.isProduction
 
 // Validation de la configuration
 export const validateConfig = (): boolean => {
+  // En développement, accepter une URL vide (proxy Vite)
+  if (config.isDevelopment && !config.apiUrl) {
+    console.log('✅ Development mode: Using Vite proxy for API calls')
+    return true
+  }
+  
   if (!config.apiUrl) {
     console.error('❌ VITE_API_URL is not configured')
     return false
@@ -61,6 +67,10 @@ export const validateConfig = (): boolean => {
 
 // Méthode pour obtenir l'URL complète d'un endpoint
 export const getApiUrl = (endpoint: string): string => {
+  // Si pas d'URL de base (développement avec proxy Vite), utiliser le chemin avec /api
+  if (!config.apiUrl) {
+    return `/api${endpoint}`
+  }
   return `${config.apiUrl}/api${endpoint}`
 }
 

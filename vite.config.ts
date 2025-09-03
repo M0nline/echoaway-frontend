@@ -10,8 +10,15 @@ export default defineConfig({
     quasar()
   ],
   server: {
-    port: 3000
-    // Plus de proxy - on utilisera VITE_API_URL directement
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path
+      }
+    }
   },
   build: {
     outDir: 'dist',
