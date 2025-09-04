@@ -17,16 +17,20 @@ const defaultConfig: EnvironmentConfig = {
 
 // Configuration de production (Railway)
 const productionConfig: EnvironmentConfig = {
-  apiUrl: import.meta.env.VITE_API_URL || 'https://your-railway-app.railway.app',
+  apiUrl:
+    import.meta.env.VITE_API_URL || 'https://your-railway-app.railway.app',
   isDevelopment: false,
   isProduction: true,
 }
 
 // Détecter l'environnement
-const isProduction = import.meta.env.PROD || import.meta.env.VITE_NODE_ENV === 'production'
+const isProduction =
+  import.meta.env.PROD || import.meta.env.VITE_NODE_ENV === 'production'
 
 // Configuration finale
-export const config: EnvironmentConfig = isProduction ? productionConfig : defaultConfig
+export const config: EnvironmentConfig = isProduction
+  ? productionConfig
+  : defaultConfig
 
 // Logs de configuration (seulement en développement)
 if (config.isDevelopment) {
@@ -34,7 +38,7 @@ if (config.isDevelopment) {
     apiUrl: config.apiUrl || 'Proxy Vite (développement)',
     environment: config.isProduction ? 'production' : 'development',
     viteMode: import.meta.env.MODE,
-    nodeEnv: import.meta.env.VITE_NODE_ENV
+    nodeEnv: import.meta.env.VITE_NODE_ENV,
   })
 }
 
@@ -50,17 +54,17 @@ export const validateConfig = (): boolean => {
     console.log('✅ Development mode: Using Vite proxy for API calls')
     return true
   }
-  
+
   if (!config.apiUrl) {
     console.error('❌ VITE_API_URL is not configured')
     return false
   }
-  
+
   if (!config.apiUrl.startsWith('http')) {
     console.error('❌ Invalid API URL format:', config.apiUrl)
     return false
   }
-  
+
   console.log('✅ Configuration validated successfully')
   return true
 }

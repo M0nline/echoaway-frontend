@@ -2,15 +2,15 @@
 
 :root {
   /* Variables CSS personnalisées */
-  --echoaway-primary: #006D77;
-  --echoaway-secondary: #83C5BE;
-  --echoaway-accent: #E29578;
-  --echoaway-dark: #006D77;
-  --echoaway-dark-page: #EDF6F9;
-  --echoaway-positive: #21BA45;
-  --echoaway-negative: #C10015;
-  --echoaway-info: #31CCEC;
-  --echoaway-warning: #F2C037;
+  --echoaway-primary: #006d77;
+  --echoaway-secondary: #83c5be;
+  --echoaway-accent: #e29578;
+  --echoaway-dark: #006d77;
+  --echoaway-dark-page: #edf6f9;
+  --echoaway-positive: #21ba45;
+  --echoaway-negative: #c10015;
+  --echoaway-info: #31ccec;
+  --echoaway-warning: #f2c037;
 }
 
 /* Styles globaux pour les cartes */
@@ -94,23 +94,44 @@
 }
 
 /* Espacements cohérents */
-.design-system-spacing-xs { margin: 4px; padding: 4px; }
-.design-system-spacing-sm { margin: 8px; padding: 8px; }
-.design-system-spacing-md { margin: 16px; padding: 16px; }
-.design-system-spacing-lg { margin: 24px; padding: 24px; }
-.design-system-spacing-xl { margin: 32px; padding: 32px; }
+.design-system-spacing-xs {
+  margin: 4px;
+  padding: 4px;
+}
+.design-system-spacing-sm {
+  margin: 8px;
+  padding: 8px;
+}
+.design-system-spacing-md {
+  margin: 16px;
+  padding: 16px;
+}
+.design-system-spacing-lg {
+  margin: 24px;
+  padding: 24px;
+}
+.design-system-spacing-xl {
+  margin: 32px;
+  padding: 32px;
+}
 
 /* Transitions cohérentes */
-.design-system-transition-fast { transition: all 0.15s ease; }
-.design-system-transition-normal { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-.design-system-transition-slow { transition: all 0.5s ease; }
+.design-system-transition-fast {
+  transition: all 0.15s ease;
+}
+.design-system-transition-normal {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.design-system-transition-slow {
+  transition: all 0.5s ease;
+}
 
 /* Responsive design */
 @media (max-width: 599px) {
   .design-system-card {
     border-radius: 8px;
   }
-  
+
   .q-card {
     border-radius: 8px;
   }
@@ -133,7 +154,7 @@
 
 /* Labels obligatoires */
 .required-field::after {
-  content: " *";
+  content: ' *';
   color: var(--echoaway-negative);
   font-weight: bold;
 }

@@ -1,127 +1,202 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Test API EchoAway</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
-        .success { background-color: #d4edda; border-color: #c3e6cb; }
-        .error { background-color: #f8d7da; border-color: #f5c6cb; }
-        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
-        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+      button {
+        padding: 10px 15px;
+        margin: 5px;
+        cursor: pointer;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 3px;
+        overflow-x: auto;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>🧪 Test API EchoAway</h1>
-    
+
     <div class="test-section">
-        <h3>1. Test de connectivité</h3>
-        <button onclick="testConnection()">Tester la connexion</button>
-        <div id="connection-result"></div>
+      <h3>1. Test de connectivité</h3>
+      <button onclick="testConnection()">Tester la connexion</button>
+      <div id="connection-result"></div>
     </div>
 
     <div class="test-section">
-        <h3>2. Test de l'endpoint de santé</h3>
-        <button onclick="testHealth()">Tester /api/status</button>
-        <div id="health-result"></div>
+      <h3>2. Test de l'endpoint de santé</h3>
+      <button onclick="testHealth()">Tester /api/status</button>
+      <div id="health-result"></div>
     </div>
 
     <div class="test-section">
-        <h3>3. Test de l'endpoint d'authentification</h3>
-        <button onclick="testAuth()">Tester /api/auth</button>
-        <div id="auth-result"></div>
+      <h3>3. Test de l'endpoint d'authentification</h3>
+      <button onclick="testAuth()">Tester /api/auth</button>
+      <div id="auth-result"></div>
     </div>
 
     <div class="test-section">
-        <h3>4. Test de l'endpoint des hébergements</h3>
-        <button onclick="testAccommodations()">Tester /api/accommodations</button>
-        <div id="accommodations-result"></div>
+      <h3>4. Test de l'endpoint des hébergements</h3>
+      <button onclick="testAccommodations()">Tester /api/accommodations</button>
+      <div id="accommodations-result"></div>
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:3001';
-        
-        function displayResult(elementId, success, message, data = null) {
-            const element = document.getElementById(elementId);
-            element.className = success ? 'success' : 'error';
-            element.innerHTML = `
+      const API_BASE = 'http://localhost:3001'
+
+      function displayResult(elementId, success, message, data = null) {
+        const element = document.getElementById(elementId)
+        element.className = success ? 'success' : 'error'
+        element.innerHTML = `
                 <strong>${success ? '✅ Succès' : '❌ Erreur'}:</strong> ${message}
                 ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
-            `;
-        }
+            `
+      }
 
-        async function testConnection() {
-            try {
-                const response = await fetch(`${API_BASE}/api/status`);
-                if (response.ok) {
-                    const data = await response.json();
-                    displayResult('connection-result', true, 'Connexion réussie à l\'API', data);
-                } else {
-                    displayResult('connection-result', false, `Erreur HTTP: ${response.status}`);
-                }
-            } catch (error) {
-                displayResult('connection-result', false, `Erreur de connexion: ${error.message}`);
-            }
+      async function testConnection() {
+        try {
+          const response = await fetch(`${API_BASE}/api/status`)
+          if (response.ok) {
+            const data = await response.json()
+            displayResult(
+              'connection-result',
+              true,
+              "Connexion réussie à l'API",
+              data
+            )
+          } else {
+            displayResult(
+              'connection-result',
+              false,
+              `Erreur HTTP: ${response.status}`
+            )
+          }
+        } catch (error) {
+          displayResult(
+            'connection-result',
+            false,
+            `Erreur de connexion: ${error.message}`
+          )
         }
+      }
 
-        async function testHealth() {
-            try {
-                const response = await fetch(`${API_BASE}/api/status`);
-                if (response.ok) {
-                    const data = await response.json();
-                    displayResult('health-result', true, 'Endpoint de santé accessible', data);
-                } else {
-                    displayResult('health-result', false, `Erreur HTTP: ${response.status}`);
-                }
-            } catch (error) {
-                displayResult('health-result', false, `Erreur: ${error.message}`);
-            }
+      async function testHealth() {
+        try {
+          const response = await fetch(`${API_BASE}/api/status`)
+          if (response.ok) {
+            const data = await response.json()
+            displayResult(
+              'health-result',
+              true,
+              'Endpoint de santé accessible',
+              data
+            )
+          } else {
+            displayResult(
+              'health-result',
+              false,
+              `Erreur HTTP: ${response.status}`
+            )
+          }
+        } catch (error) {
+          displayResult('health-result', false, `Erreur: ${error.message}`)
         }
+      }
 
-        async function testAuth() {
-            try {
-                const response = await fetch(`${API_BASE}/api/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: 'test@test.com', password: 'test' })
-                });
-                
-                if (response.status === 401) {
-                    displayResult('auth-result', true, 'Endpoint d\'authentification accessible (401 attendu pour credentials invalides)');
-                } else if (response.ok) {
-                    const data = await response.json();
-                    displayResult('auth-result', true, 'Authentification réussie (inattendu)', data);
-                } else {
-                    displayResult('auth-result', false, `Erreur HTTP: ${response.status}`);
-                }
-            } catch (error) {
-                displayResult('auth-result', false, `Erreur: ${error.message}`);
-            }
+      async function testAuth() {
+        try {
+          const response = await fetch(`${API_BASE}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: 'test@test.com', password: 'test' }),
+          })
+
+          if (response.status === 401) {
+            displayResult(
+              'auth-result',
+              true,
+              "Endpoint d'authentification accessible (401 attendu pour credentials invalides)"
+            )
+          } else if (response.ok) {
+            const data = await response.json()
+            displayResult(
+              'auth-result',
+              true,
+              'Authentification réussie (inattendu)',
+              data
+            )
+          } else {
+            displayResult(
+              'auth-result',
+              false,
+              `Erreur HTTP: ${response.status}`
+            )
+          }
+        } catch (error) {
+          displayResult('auth-result', false, `Erreur: ${error.message}`)
         }
+      }
 
-        async function testAccommodations() {
-            try {
-                const response = await fetch(`${API_BASE}/api/accommodations`);
-                if (response.status === 401) {
-                    displayResult('accommodations-result', true, 'Endpoint des hébergements accessible (401 attendu sans authentification)');
-                } else if (response.ok) {
-                    const data = await response.json();
-                    displayResult('accommodations-result', true, 'Hébergements récupérés (inattendu)', data);
-                } else {
-                    displayResult('accommodations-result', false, `Erreur HTTP: ${response.status}`);
-                }
-            } catch (error) {
-                displayResult('accommodations-result', false, `Erreur: ${error.message}`);
-            }
+      async function testAccommodations() {
+        try {
+          const response = await fetch(`${API_BASE}/api/accommodations`)
+          if (response.status === 401) {
+            displayResult(
+              'accommodations-result',
+              true,
+              'Endpoint des hébergements accessible (401 attendu sans authentification)'
+            )
+          } else if (response.ok) {
+            const data = await response.json()
+            displayResult(
+              'accommodations-result',
+              true,
+              'Hébergements récupérés (inattendu)',
+              data
+            )
+          } else {
+            displayResult(
+              'accommodations-result',
+              false,
+              `Erreur HTTP: ${response.status}`
+            )
+          }
+        } catch (error) {
+          displayResult(
+            'accommodations-result',
+            false,
+            `Erreur: ${error.message}`
+          )
         }
+      }
 
-        // Test automatique au chargement
-        window.onload = function() {
-            console.log('🧪 Tests API EchoAway chargés');
-            console.log(`🔗 API Base: ${API_BASE}`);
-        };
+      // Test automatique au chargement
+      window.onload = function () {
+        console.log('🧪 Tests API EchoAway chargés')
+        console.log(`🔗 API Base: ${API_BASE}`)
+      }
     </script>
-</body>
+  </body>
 </html>

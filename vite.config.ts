@@ -5,9 +5,9 @@ import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 export default defineConfig({
   plugins: [
     vue({
-      template: { transformAssetUrls }
+      template: { transformAssetUrls },
     }),
-    quasar()
+    quasar(),
   ],
   server: {
     port: 3000,
@@ -16,9 +16,9 @@ export default defineConfig({
         target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path
-      }
-    }
+        rewrite: (path) => path,
+      },
+    },
   },
   build: {
     outDir: 'dist',
@@ -28,9 +28,9 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['vue', 'vue-router', 'pinia'],
-          quasar: ['quasar', '@quasar/extras']
-        }
-      }
-    }
-  }
-}) 
+          quasar: ['quasar', '@quasar/extras'],
+        },
+      },
+    },
+  },
+})

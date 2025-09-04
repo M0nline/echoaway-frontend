@@ -16,14 +16,9 @@
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn 
-          flat 
-          label="Annuler" 
-          @click="handleCancel"
-          class="q-mr-sm"
-        />
-        <q-btn 
-          color="primary" 
+        <q-btn flat label="Annuler" @click="handleCancel" class="q-mr-sm" />
+        <q-btn
+          color="primary"
           :label="isEditing ? 'Modifier' : 'Créer'"
           :loading="loading"
           @click="triggerFormSubmit"
@@ -45,14 +40,14 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  loading: false
+  loading: false,
 })
 
 // Emits
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
-  'submit': [form: AccommodationFormData]
-  'cancel': []
+  submit: [form: AccommodationFormData]
+  cancel: []
 }>()
 
 // Types
@@ -87,7 +82,7 @@ interface AccommodationFormData {
 // État local
 const show = computed({
   get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value)
+  set: (value) => emit('update:modelValue', value),
 })
 
 const isEditing = computed(() => !!props.accommodation)
@@ -104,19 +99,25 @@ const formData = ref<AccommodationFormData>({
   numberOfBeds: undefined,
   description: '',
   bookingLink: '',
-  phoneNumber: ''
+  phoneNumber: '',
 })
 
 // Référence au formulaire pour déclencher la soumission
 const formRef = ref<InstanceType<typeof AccommodationForm> | null>(null)
 
 // Mapper la connectivité du backend vers le frontend
-const mapConnectivity = (backendConnectivity: string): 'Zone blanche' | 'Zone grise' | 'Autre' => {
+const mapConnectivity = (
+  backendConnectivity: string
+): 'Zone blanche' | 'Zone grise' | 'Autre' => {
   switch (backendConnectivity) {
-    case 'None': return 'Zone blanche'
-    case 'Low': return 'Zone grise'
-    case 'High': return 'Autre'
-    default: return 'Zone blanche'
+    case 'None':
+      return 'Zone blanche'
+    case 'Low':
+      return 'Zone grise'
+    case 'High':
+      return 'Autre'
+    default:
+      return 'Zone blanche'
   }
 }
 
@@ -134,33 +135,37 @@ const resetForm = () => {
     numberOfBeds: undefined,
     description: '',
     bookingLink: '',
-    phoneNumber: ''
+    phoneNumber: '',
   }
 }
 
 // Initialiser le formulaire avec les données existantes
-watch(() => props.accommodation, (newAccommodation) => {
-  if (newAccommodation) {
-    // Mode édition - remplir avec les données existantes
-    formData.value = {
-      name: newAccommodation.name || '',
-      address: newAccommodation.location || '',
-      postalCode: '',
-      city: '',
-      type: newAccommodation.type || '',
-      connectivity: mapConnectivity(newAccommodation.connectivity),
-      priceMinPerNight: newAccommodation.pricePerNight,
-      priceMaxPerNight: newAccommodation.pricePerNight,
-      numberOfBeds: newAccommodation.numberOfRooms,
-      description: newAccommodation.description || '',
-      bookingLink: '',
-      phoneNumber: ''
+watch(
+  () => props.accommodation,
+  (newAccommodation) => {
+    if (newAccommodation) {
+      // Mode édition - remplir avec les données existantes
+      formData.value = {
+        name: newAccommodation.name || '',
+        address: newAccommodation.location || '',
+        postalCode: '',
+        city: '',
+        type: newAccommodation.type || '',
+        connectivity: mapConnectivity(newAccommodation.connectivity),
+        priceMinPerNight: newAccommodation.pricePerNight,
+        priceMaxPerNight: newAccommodation.pricePerNight,
+        numberOfBeds: newAccommodation.numberOfRooms,
+        description: newAccommodation.description || '',
+        bookingLink: '',
+        phoneNumber: '',
+      }
+    } else {
+      // Mode création - formulaire vide
+      resetForm()
     }
-  } else {
-    // Mode création - formulaire vide
-    resetForm()
-  }
-}, { immediate: true })
+  },
+  { immediate: true }
+)
 
 // Déclencher la soumission du formulaire
 const triggerFormSubmit = () => {

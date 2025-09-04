@@ -5,6 +5,7 @@ Vue3 + Quasar application for EchoAway
 ## 🏗️ Project Architecture
 
 This project is part of a **multi-repositories** architecture with:
+
 - **Frontend** : Vue3/Quasar application with Vite (this repository)
 - **Backend** : NestJS API with TypeORM and PostgreSQL (separate repository)
 - **Deployment** : Vercel (frontend) + Railway (backend)
@@ -22,9 +23,10 @@ This project is part of a **multi-repositories** architecture with:
 
 **⚠️ IMPORTANT: This repository does NOT contain the main docker-compose file.**
 
-*To launch the complete application locally, you need to clone BOTH repositories.*
+_To launch the complete application locally, you need to clone BOTH repositories._
 
 ### Prerequisites
+
 - Docker and Docker Compose installed
 - Ports 3001 (backend) and 5432 (database) available
 - Node.js 18+ (recommended: use NVM for version management)
@@ -32,6 +34,7 @@ This project is part of a **multi-repositories** architecture with:
 - **SSH key configured** for GitHub access
 
 ### Node.js Version Management (NVM)
+
 ```bash
 # Install NVM
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
@@ -42,9 +45,11 @@ nvm use
 ```
 
 ### SSH Configuration
+
 **Ask a team member with repository access to add your SSH key to the GitHub repositories.**
 
 ### Quick Start
+
 ```bash
 # 1. Clone the backend repository (contains the main docker-compose)
 git clone git@github.com:username/echoaway-backend.git
@@ -68,6 +73,7 @@ npm run dev
 ```
 
 ### Folder Structure
+
 ```
 echoaway-app/
 ├── echoaway-backend/          # Backend repository (contains docker-compose.yml)
@@ -130,6 +136,7 @@ echoaway-frontend/
 ### Development
 
 1. Copy the example file:
+
 ```bash
 cp env.example .env
 ```
@@ -155,6 +162,7 @@ VITE_API_URL=https://echoaway-backend-production.up.railway.app
 ## API Configuration
 
 The project uses a centralized API service (`src/services/api.ts`) that:
+
 - Manages API URL via `VITE_API_URL`
 - Configures authentication headers
 - Handles errors centrally
@@ -168,6 +176,7 @@ The project uses a centralized API service (`src/services/api.ts`) that:
 - **Backend** : `https://echoaway-backend-production.up.railway.app`
 
 ### Platforms Used
+
 - **Frontend** : Vercel (automatic deployment from Git)
 - **Backend** : Railway (automatic deployment from Git)
 - **Database** : Railway PostgreSQL
@@ -235,6 +244,7 @@ Chaque push sur la branche `main` déclenche automatiquement :
 ## Vite Configuration
 
 The project uses Vite with:
+
 - TypeScript support
 - Quasar integration
 - Hot Module Replacement (HMR)
@@ -244,17 +254,20 @@ The project uses Vite with:
 ## Architecture
 
 ### Components
+
 - **Views** : Main application pages
 - **Stores** : Centralized state management with Pinia
 - **Services** : Business logic and API calls
 - **Router** : Navigation and route protection
 
 ### Application State
+
 - **AuthStore** : Authentication management
 - **JWT Token** : Secure session storage
 - **User** : Connected user information
 
 ### Security
+
 - **Guards** : Sensitive route protection
 - **Validation** : Input data verification
 - **CORS** : Backend communication configuration
@@ -262,12 +275,14 @@ The project uses Vite with:
 ## Development
 
 ### Adding New Features
+
 1. Create the view in `src/views/`
 2. Add the route in `src/router/index.ts`
 3. Implement logic in the appropriate store
 4. Test with backend API
 
 ### Styles and UI
+
 - **Quasar** : Ready-to-use UI components
 - **SCSS** : Custom variables and mixins
 - **Responsive** : Mobile/desktop adaptive design

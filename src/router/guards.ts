@@ -1,17 +1,14 @@
 import { useAuthStore } from '../stores/auth'
 
-export async function requireAuth(
-  to: any,
-  from: any
-) {
+export async function requireAuth(to: any, _from: any) {
   const authStore = useAuthStore()
-  
+
   // Vérifier si l'utilisateur est authentifié
   if (!authStore.isAuthenticated) {
     // Rediriger vers la page de connexion avec la page demandée en paramètre
     return {
       path: '/login',
-      query: { redirect: to.fullPath }
+      query: { redirect: to.fullPath },
     }
   }
 
@@ -24,17 +21,14 @@ export async function requireAuth(
     authStore.logout()
     return {
       path: '/login',
-      query: { redirect: to.fullPath }
+      query: { redirect: to.fullPath },
     }
   }
 }
 
-export async function requireGuest(
-  to: any,
-  from: any
-) {
+export async function requireGuest(_to: any, _from: any) {
   const authStore = useAuthStore()
-  
+
   // Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil
   if (authStore.isAuthenticated) {
     return '/'
@@ -43,18 +37,14 @@ export async function requireGuest(
   return true
 }
 
-export async function requireRole(
-  roles: string[],
-  to: any,
-  from: any
-) {
+export async function requireRole(roles: string[], to: any, _from: any) {
   const authStore = useAuthStore()
-  
+
   // Vérifier l'authentification d'abord
   if (!authStore.isAuthenticated) {
     return {
       path: '/login',
-      query: { redirect: to.fullPath }
+      query: { redirect: to.fullPath },
     }
   }
 
@@ -66,6 +56,3 @@ export async function requireRole(
 
   return true
 }
-
-
-
