@@ -26,7 +26,7 @@ export async function requireAuth(to: any, _from: any) {
   }
 }
 
-export async function requireGuest(to: any, _from: any) {
+export async function requireGuest(_to: any, _from: any) {
   const authStore = useAuthStore()
 
   // Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil

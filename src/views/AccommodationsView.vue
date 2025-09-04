@@ -189,7 +189,7 @@ interface Accommodation {
 
 // Composables
 const $q = useQuasar()
-const authStore = useAuthStore()
+const _authStore = useAuthStore()
 
 // État réactif
 const loading = ref(false)
