@@ -18,7 +18,7 @@
     <!-- Section principale - Besoin de déconnecter -->
     <section class="hero-section">
       <div class="container">
-        <h1 class="hero-title">Besoin de déconnecter ?</h1>
+        <h1 class="hero-title">Besoin de déconnecter ? - CI/CD Test</h1>
         <p class="hero-description">
           EchoAway connecte les voyageurs à la déconnexion. Explorez zones blanches, 
           hébergements éco-responsables et activités hors réseau pour un séjour authentique, 
