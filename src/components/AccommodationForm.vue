@@ -8,16 +8,16 @@
 
     <!-- Titre -->
     <q-input
-      v-model="formData.name"
+      v-model="formData.title"
       label="Titre de l'hébergement"
       outlined
       :rules="[(val) => !!val || 'Le titre est obligatoire']"
       aria-required="true"
-      aria-describedby="name-error"
+      aria-describedby="title-error"
       hint="Ex: Chalet des Alpes, Maison de campagne, etc."
     />
-    <div id="name-error" class="sr-only" v-if="validationErrors.name">
-      Erreur: {{ validationErrors.name }}
+    <div id="title-error" class="sr-only" v-if="validationErrors.title">
+      Erreur: {{ validationErrors.title }}
     </div>
 
     <!-- Adresse -->
@@ -226,25 +226,25 @@ const emit = defineEmits<{
 
 // Types
 interface AccommodationFormData {
-  name: string
+  title: string
   address: string
   postalCode: string
   city: string
   type: string
   connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
-  priceMinPerNight?: number
-  priceMaxPerNight?: number
-  numberOfBeds?: number
+  priceMinPerNight: number
+  priceMaxPerNight: number
+  numberOfBeds: number
   description: string
-  bookingLink: string
-  phoneNumber: string
+  bookingLink?: string
+  phoneNumber?: string
 }
 
 // Options pour les selects
 const connectivityOptions = [
-  { label: 'Zone blanche', value: 'Zone blanche' },
-  { label: 'Zone grise', value: 'Zone grise' },
-  { label: 'Autre', value: 'Autre' },
+  'Zone blanche',
+  'Zone grise',
+  'Autre',
 ]
 
 const typeOptions = [
@@ -261,15 +261,15 @@ const typeOptions = [
 
 // État local du formulaire
 const formData = ref<AccommodationFormData>({
-  name: '',
+  title: '',
   address: '',
   postalCode: '',
   city: '',
   type: '',
   connectivity: 'Zone blanche',
-  priceMinPerNight: undefined,
-  priceMaxPerNight: undefined,
-  numberOfBeds: undefined,
+  priceMinPerNight: 0,
+  priceMaxPerNight: 0,
+  numberOfBeds: 1,
   description: '',
   bookingLink: '',
   phoneNumber: '',
@@ -303,8 +303,8 @@ const validateForm = (): boolean => {
   validationErrors.value = {}
 
   // Validation des champs obligatoires
-  if (!formData.value.name) {
-    validationErrors.value.name = 'Le titre est obligatoire'
+  if (!formData.value.title) {
+    validationErrors.value.title = 'Le titre est obligatoire'
   }
   if (!formData.value.address) {
     validationErrors.value.address = "L'adresse est obligatoire"
@@ -317,6 +317,25 @@ const validateForm = (): boolean => {
   }
   if (!formData.value.type) {
     validationErrors.value.type = 'Le type est obligatoire'
+  }
+  if (!formData.value.description) {
+    validationErrors.value.description = 'La description est obligatoire'
+  }
+
+  // Validation des prix
+  if (formData.value.priceMinPerNight < 0) {
+    validationErrors.value.priceMinPerNight = 'Le prix minimum ne peut pas être négatif'
+  }
+  if (formData.value.priceMaxPerNight < 0) {
+    validationErrors.value.priceMaxPerNight = 'Le prix maximum ne peut pas être négatif'
+  }
+  if (formData.value.priceMinPerNight > formData.value.priceMaxPerNight) {
+    validationErrors.value.priceMaxPerNight = 'Le prix maximum doit être supérieur au prix minimum'
+  }
+
+  // Validation du nombre de couchages
+  if (formData.value.numberOfBeds < 1) {
+    validationErrors.value.numberOfBeds = 'Le nombre de couchages doit être d\'au moins 1'
   }
 
   // Validation du contact de réservation

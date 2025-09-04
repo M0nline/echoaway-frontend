@@ -79,16 +79,17 @@ class ApiService {
   }
 
   // Méthodes pour les hébergements
-  async getAccommodations(token?: string) {
-    const headers: Record<string, string> = {}
-    if (token) {
-      headers.Authorization = `Bearer ${token}`
-    }
-
-    return this.request('/accommodations', { headers })
+  async getAccommodations() {
+    // Les hébergements sont accessibles à tous (pas besoin d'auth)
+    return this.request('/accommodations')
   }
 
-  async createAccommodation(data: any, token: string) {
+  async createAccommodation(data: any) {
+    const token = this.getAuthToken()
+    if (!token) {
+      throw new Error('Token d\'authentification requis')
+    }
+    
     return this.request('/accommodations', {
       method: 'POST',
       headers: {
@@ -98,7 +99,12 @@ class ApiService {
     })
   }
 
-  async updateAccommodation(id: string, data: any, token: string) {
+  async updateAccommodation(id: string, data: any) {
+    const token = this.getAuthToken()
+    if (!token) {
+      throw new Error('Token d\'authentification requis')
+    }
+    
     return this.request(`/accommodations/${id}`, {
       method: 'PUT',
       headers: {
@@ -108,13 +114,24 @@ class ApiService {
     })
   }
 
-  async deleteAccommodation(id: string, token: string) {
+  async deleteAccommodation(id: string) {
+    const token = this.getAuthToken()
+    if (!token) {
+      throw new Error('Token d\'authentification requis')
+    }
+    
     return this.request(`/accommodations/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
+  }
+
+  // Méthode utilitaire pour récupérer le token d'authentification
+  private getAuthToken(): string | null {
+    // Récupérer le token depuis le localStorage ou le store d'auth
+    return localStorage.getItem('auth_token') || null
   }
 
   // Méthode pour vérifier la connectivité

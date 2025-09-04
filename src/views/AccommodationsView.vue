@@ -97,10 +97,10 @@
                 <q-card class="accommodation-card design-system-card">
                   <q-card-section>
                     <div class="text-h6 text-weight-medium">
-                      {{ accommodation.name }}
+                      {{ accommodation.title }}
                     </div>
                     <div class="text-subtitle2 text-grey-6 q-mt-xs">
-                      {{ accommodation.location }}
+                      {{ accommodation.address }}, {{ accommodation.postalCode }} {{ accommodation.city }}
                     </div>
                     <div class="q-mt-md">
                       <q-chip
@@ -116,12 +116,21 @@
                       <q-chip color="secondary" text-color="white" size="sm">
                         {{ accommodation.type }}
                       </q-chip>
+                      <q-chip color="info" text-color="white" size="sm" class="q-ml-xs">
+                        {{ accommodation.numberOfBeds }} couchages
+                      </q-chip>
                     </div>
                     <div
-                      v-if="accommodation.pricePerNight"
+                      v-if="accommodation.priceMinPerNight && accommodation.priceMaxPerNight"
                       class="text-h6 text-primary q-mt-md"
                     >
-                      {{ accommodation.pricePerNight }}€ / nuit
+                      {{ accommodation.priceMinPerNight }}€ - {{ accommodation.priceMaxPerNight }}€ / nuit
+                    </div>
+                    <div
+                      v-else-if="accommodation.priceMinPerNight"
+                      class="text-h6 text-primary q-mt-md"
+                    >
+                      À partir de {{ accommodation.priceMinPerNight }}€ / nuit
                     </div>
                     <div
                       v-if="accommodation.description"
@@ -175,16 +184,22 @@ import AccommodationDialog from '../components/AccommodationDialog.vue'
 
 // Types
 interface Accommodation {
-  id: string // Changé de number à string pour correspondre au backend
-  name: string
-  location: string
+  id: number
+  title: string
+  address: string
+  postalCode: string
+  city: string
   type: string
-  connectivity: 'None' | 'Low' | 'High'
-  pricePerNight?: number
-  numberOfRooms?: number
-  description?: string
-  createdAt: string
-  updatedAt: string
+  connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
+  priceMinPerNight: number
+  priceMaxPerNight: number
+  numberOfBeds: number
+  description: string
+  bookingLink?: string
+  phoneNumber?: string
+  hostId: number
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 // Composables
@@ -205,9 +220,9 @@ const filters = reactive({
 
 // Options pour les selects (utilisées par le composant AccommodationForm)
 const connectivityOptions = [
-  { label: 'Zone blanche', value: 'Zone blanche' },
-  { label: 'Zone grise', value: 'Zone grise' },
-  { label: 'Autre', value: 'Autre' },
+  'Zone blanche',
+  'Zone grise', 
+  'Autre',
 ]
 
 const typeOptions = [
@@ -227,7 +242,8 @@ const loadAccommodations = async () => {
   loading.value = true
   try {
     // Charger les hébergements (accessible à tous)
-    accommodations.value = await apiService.getAccommodations()
+    const data = await apiService.getAccommodations()
+    accommodations.value = data as Accommodation[]
   } catch (error) {
     console.error('Erreur lors du chargement:', error)
     $q.notify({
@@ -244,7 +260,7 @@ const saveAccommodation = async (formData: any) => {
     if (editingAccommodation.value) {
       // Mise à jour
       await apiService.updateAccommodation(
-        editingAccommodation.value.id,
+        editingAccommodation.value.id.toString(),
         formData
       )
       $q.notify({
@@ -252,8 +268,19 @@ const saveAccommodation = async (formData: any) => {
         message: 'Hébergement modifié avec succès',
       })
     } else {
-      // Création
-      await apiService.createAccommodation(formData)
+      // Création - ajouter l'hostId depuis le store d'auth
+      const authStore = useAuthStore()
+      const userData = authStore.user
+      if (!userData) {
+        throw new Error('Utilisateur non connecté')
+      }
+      
+      const accommodationData = {
+        ...formData,
+        hostId: parseInt(userData.id)
+      }
+      
+      await apiService.createAccommodation(accommodationData)
       $q.notify({
         type: 'positive',
         message: 'Hébergement créé avec succès',
@@ -262,11 +289,12 @@ const saveAccommodation = async (formData: any) => {
 
     closeDialog()
     loadAccommodations()
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erreur lors de la sauvegarde:', error)
+    const errorMessage = error.message || 'Erreur lors de la sauvegarde'
     $q.notify({
       type: 'negative',
-      message: 'Erreur lors de la sauvegarde',
+      message: errorMessage,
     })
   }
 }
@@ -276,7 +304,7 @@ const editAccommodation = (accommodation: Accommodation) => {
   showCreateDialog.value = true
 }
 
-const deleteAccommodation = async (id: string) => {
+const deleteAccommodation = async (id: number) => {
   $q.dialog({
     title: 'Confirmation',
     message: 'Êtes-vous sûr de vouloir supprimer cet hébergement ?',
@@ -284,18 +312,19 @@ const deleteAccommodation = async (id: string) => {
     persistent: true,
   }).onOk(async () => {
     try {
-      await apiService.deleteAccommodation(id)
+      await apiService.deleteAccommodation(id.toString())
 
       $q.notify({
         type: 'positive',
         message: 'Hébergement supprimé avec succès',
       })
       loadAccommodations()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur lors de la suppression:', error)
+      const errorMessage = error.message || 'Erreur lors de la suppression'
       $q.notify({
         type: 'negative',
-        message: 'Erreur lors de la suppression',
+        message: errorMessage,
       })
     }
   })
@@ -308,10 +337,12 @@ const closeDialog = () => {
 
 const getConnectivityColor = (connectivity: string) => {
   switch (connectivity) {
-    case 'High':
+    case 'Autre':
       return 'positive'
-    case 'Low':
+    case 'Zone grise':
       return 'warning'
+    case 'Zone blanche':
+      return 'grey'
     default:
       return 'grey'
   }
