@@ -18,8 +18,9 @@
                 type="email"
                 outlined
                 :rules="[
-                  val => !!val || 'L\'email est requis',
-                  val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Email invalide'
+                  (val) => !!val || 'L\'email est requis',
+                  (val) =>
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Email invalide',
                 ]"
                 :disable="authStore.loading"
               >
@@ -33,7 +34,7 @@
                 label="Mot de passe"
                 :type="showPassword ? 'text' : 'password'"
                 outlined
-                :rules="[val => !!val || 'Le mot de passe est requis']"
+                :rules="[(val) => !!val || 'Le mot de passe est requis']"
                 :disable="authStore.loading"
               >
                 <template v-slot:prepend>
@@ -119,7 +120,7 @@ const form = reactive({
 const handleLogin = async () => {
   try {
     await authStore.login(form.email, form.password)
-    
+
     $q.notify({
       type: 'positive',
       message: 'Connexion réussie !',
@@ -127,7 +128,8 @@ const handleLogin = async () => {
     })
 
     // Rediriger vers la page d'accueil ou la page demandée
-    const redirectTo = router.currentRoute.value.query.redirect as string || '/'
+    const redirectTo =
+      (router.currentRoute.value.query.redirect as string) || '/'
     router.push(redirectTo)
   } catch (error: any) {
     $q.notify({
@@ -154,6 +156,3 @@ const forgotPassword = () => {
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
 }
 </style>
-
-
-

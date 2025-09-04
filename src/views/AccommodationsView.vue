@@ -7,9 +7,9 @@
           <div class="text-h3 text-lg-h4 text-md-h5 text-primary">
             Gestion des Hébergements
           </div>
-          <q-btn 
-            color="primary" 
-            icon="add" 
+          <q-btn
+            color="primary"
+            icon="add"
             label="Nouvel hébergement"
             size="lg"
             @click="showCreateDialog = true"
@@ -78,57 +78,70 @@
               <div class="q-mt-sm">Chargement...</div>
             </div>
 
-            <div v-else-if="accommodations.length === 0" class="text-center q-pa-md">
+            <div
+              v-else-if="accommodations.length === 0"
+              class="text-center q-pa-md"
+            >
               <q-icon name="hotel" size="100px" color="grey-4" />
-              <div class="text-h6 text-grey-6 q-mt-md">Aucun hébergement trouvé</div>
+              <div class="text-h6 text-grey-6 q-mt-md">
+                Aucun hébergement trouvé
+              </div>
             </div>
 
             <div v-else class="row q-col-gutter-lg">
-              <div 
-                v-for="accommodation in accommodations" 
+              <div
+                v-for="accommodation in accommodations"
                 :key="accommodation.id"
                 class="col-12 col-xl-3 col-lg-4 col-md-6"
               >
                 <q-card class="accommodation-card design-system-card">
                   <q-card-section>
-                    <div class="text-h6 text-weight-medium">{{ accommodation.name }}</div>
-                    <div class="text-subtitle2 text-grey-6 q-mt-xs">{{ accommodation.location }}</div>
+                    <div class="text-h6 text-weight-medium">
+                      {{ accommodation.name }}
+                    </div>
+                    <div class="text-subtitle2 text-grey-6 q-mt-xs">
+                      {{ accommodation.location }}
+                    </div>
                     <div class="q-mt-md">
-                      <q-chip 
-                        :color="getConnectivityColor(accommodation.connectivity)"
+                      <q-chip
+                        :color="
+                          getConnectivityColor(accommodation.connectivity)
+                        "
                         text-color="white"
                         size="sm"
                         class="q-mr-xs"
                       >
                         {{ accommodation.connectivity }}
                       </q-chip>
-                      <q-chip 
-                        color="secondary" 
-                        text-color="white"
-                        size="sm"
-                      >
+                      <q-chip color="secondary" text-color="white" size="sm">
                         {{ accommodation.type }}
                       </q-chip>
                     </div>
-                    <div v-if="accommodation.pricePerNight" class="text-h6 text-primary q-mt-md">
+                    <div
+                      v-if="accommodation.pricePerNight"
+                      class="text-h6 text-primary q-mt-md"
+                    >
                       {{ accommodation.pricePerNight }}€ / nuit
                     </div>
-                    <div v-if="accommodation.description" class="text-body2 q-mt-sm text-grey-7">
+                    <div
+                      v-if="accommodation.description"
+                      class="text-body2 q-mt-sm text-grey-7"
+                    >
                       {{ accommodation.description }}
                     </div>
                   </q-card-section>
 
                   <q-card-actions align="right">
-                    <q-btn 
-                      flat 
-                      color="primary" 
+                    <q-btn
+                      flat
+                      color="primary"
                       icon="edit"
                       size="sm"
                       @click="editAccommodation(accommodation)"
                     />
-                    <q-btn 
-                      flat 
-                      color="negative" 
+                    <q-btn
+                      flat
+                      color="negative"
                       icon="delete"
                       size="sm"
                       @click="deleteAccommodation(accommodation.id)"
@@ -162,7 +175,7 @@ import AccommodationDialog from '../components/AccommodationDialog.vue'
 
 // Types
 interface Accommodation {
-  id: string  // Changé de number à string pour correspondre au backend
+  id: string // Changé de number à string pour correspondre au backend
   name: string
   location: string
   type: string
@@ -187,14 +200,14 @@ const editingAccommodation = ref<Accommodation | null>(null)
 const filters = reactive({
   search: '',
   connectivity: null as string | null,
-  type: null as string | null
+  type: null as string | null,
 })
 
 // Options pour les selects (utilisées par le composant AccommodationForm)
 const connectivityOptions = [
   { label: 'Zone blanche', value: 'Zone blanche' },
   { label: 'Zone grise', value: 'Zone grise' },
-  { label: 'Autre', value: 'Autre' }
+  { label: 'Autre', value: 'Autre' },
 ]
 
 const typeOptions = [
@@ -206,7 +219,7 @@ const typeOptions = [
   'Yourte/Tipi',
   'Roulotte',
   'Troglodyte',
-  'Phare/Refuge'
+  'Phare/Refuge',
 ]
 
 // Méthodes
@@ -219,7 +232,7 @@ const loadAccommodations = async () => {
     console.error('Erreur lors du chargement:', error)
     $q.notify({
       type: 'negative',
-      message: 'Erreur lors du chargement des hébergements'
+      message: 'Erreur lors du chargement des hébergements',
     })
   } finally {
     loading.value = false
@@ -231,29 +244,29 @@ const saveAccommodation = async (formData: any) => {
     if (editingAccommodation.value) {
       // Mise à jour
       await apiService.updateAccommodation(
-        editingAccommodation.value.id, 
+        editingAccommodation.value.id,
         formData
       )
       $q.notify({
         type: 'positive',
-        message: 'Hébergement modifié avec succès'
+        message: 'Hébergement modifié avec succès',
       })
     } else {
       // Création
       await apiService.createAccommodation(formData)
       $q.notify({
         type: 'positive',
-        message: 'Hébergement créé avec succès'
+        message: 'Hébergement créé avec succès',
       })
     }
-    
+
     closeDialog()
     loadAccommodations()
   } catch (error) {
     console.error('Erreur lors de la sauvegarde:', error)
     $q.notify({
       type: 'negative',
-      message: 'Erreur lors de la sauvegarde'
+      message: 'Erreur lors de la sauvegarde',
     })
   }
 }
@@ -268,21 +281,21 @@ const deleteAccommodation = async (id: string) => {
     title: 'Confirmation',
     message: 'Êtes-vous sûr de vouloir supprimer cet hébergement ?',
     cancel: true,
-    persistent: true
+    persistent: true,
   }).onOk(async () => {
     try {
       await apiService.deleteAccommodation(id)
-      
+
       $q.notify({
         type: 'positive',
-        message: 'Hébergement supprimé avec succès'
+        message: 'Hébergement supprimé avec succès',
       })
       loadAccommodations()
     } catch (error) {
       console.error('Erreur lors de la suppression:', error)
       $q.notify({
         type: 'negative',
-        message: 'Erreur lors de la suppression'
+        message: 'Erreur lors de la suppression',
       })
     }
   })
@@ -295,9 +308,12 @@ const closeDialog = () => {
 
 const getConnectivityColor = (connectivity: string) => {
   switch (connectivity) {
-    case 'High': return 'positive'
-    case 'Low': return 'warning'
-    default: return 'grey'
+    case 'High':
+      return 'positive'
+    case 'Low':
+      return 'warning'
+    default:
+      return 'grey'
   }
 }
 
@@ -348,7 +364,7 @@ onMounted(() => {
 
 /* Labels obligatoires */
 .required-field::after {
-  content: " *";
+  content: ' *';
   color: #c10015;
 }
 </style>

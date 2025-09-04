@@ -6,7 +6,9 @@
         <div class="logo">ECHOAWAY</div>
         <nav class="nav">
           <a href="#" class="nav-link">Séjours</a>
-          <router-link to="/accommodations" class="nav-link">Hébergements</router-link>
+          <router-link to="/accommodations" class="nav-link"
+            >Hébergements</router-link
+          >
           <a href="#" class="nav-link">Loisirs</a>
         </nav>
         <router-link to="/login">
@@ -20,11 +22,11 @@
       <div class="container">
         <h1 class="hero-title">Besoin de déconnecter ? - CI/CD Test</h1>
         <p class="hero-description">
-          EchoAway connecte les voyageurs à la déconnexion. Explorez zones blanches, 
-          hébergements éco-responsables et activités hors réseau pour un séjour authentique, 
-          loin du numérique et proche de l'essentiel.
+          EchoAway connecte les voyageurs à la déconnexion. Explorez zones
+          blanches, hébergements éco-responsables et activités hors réseau pour
+          un séjour authentique, loin du numérique et proche de l'essentiel.
         </p>
-        
+
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-image"></div>
@@ -50,21 +52,21 @@
       <div class="container">
         <h2 class="section-title">Recherchez votre hébergement</h2>
         <div class="search-form">
-          <q-input 
+          <q-input
             v-model="searchLocation"
-            outlined 
-            placeholder="Ville, région..." 
+            outlined
+            placeholder="Ville, région..."
             class="search-input"
           />
-          <q-input 
+          <q-input
             v-model="searchType"
-            outlined 
-            placeholder="Type" 
+            outlined
+            placeholder="Type"
             class="search-input"
           />
-          <q-btn 
-            color="dark" 
-            label="Lancer la recherche" 
+          <q-btn
+            color="dark"
+            label="Lancer la recherche"
             class="search-btn"
             size="lg"
           />
@@ -78,10 +80,11 @@
         <div class="section-header">
           <h2 class="section-title">Mieux notés x Sponsorisés</h2>
           <p class="section-subtitle">
-            If you don't try this app, you won't become the superhero you were meant to be
+            If you don't try this app, you won't become the superhero you were
+            meant to be
           </p>
         </div>
-        
+
         <div class="accommodations-grid">
           <div class="accommodation-card" v-for="i in 4" :key="i">
             <div class="accommodation-image"></div>
@@ -113,14 +116,14 @@
           <a href="#" class="footer-link">ECHOAWAY</a>
           <a href="#" class="footer-link">Nos tarifs</a>
           <a href="#" class="footer-link">Les avis</a>
-          <a href="#" class="footer-link">En savoir plus sur l'éco-responsabilité</a>
+          <a href="#" class="footer-link"
+            >En savoir plus sur l'éco-responsabilité</a
+          >
         </div>
         <div class="footer-dots">
           <div class="dot" v-for="i in 5" :key="i"></div>
         </div>
-        <div class="copyright">
-          © 2025 Made by MLM with ❤️
-        </div>
+        <div class="copyright">© 2025 Made by MLM with ❤️</div>
       </div>
     </footer>
   </div>
@@ -140,7 +143,7 @@ onMounted(() => {
 <style scoped>
 .home-page {
   min-height: 100vh;
-  background-color: #EDF6F9;
+  background-color: #edf6f9;
 }
 
 .container {
@@ -153,7 +156,7 @@ onMounted(() => {
 .header {
   background-color: white;
   padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -168,7 +171,7 @@ onMounted(() => {
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #006D77;
+  color: #006d77;
 }
 
 .nav {
@@ -178,29 +181,29 @@ onMounted(() => {
 
 .nav-link {
   text-decoration: none;
-  color: #006D77;
+  color: #006d77;
   font-weight: 500;
 }
 
 .nav-link:hover {
-  color: #83C5BE;
+  color: #83c5be;
 }
 
 /* Styles pour router-link */
 .nav a,
 .nav router-link {
   text-decoration: none;
-  color: #006D77;
+  color: #006d77;
   font-weight: 500;
 }
 
 .nav a:hover,
 .nav router-link:hover {
-  color: #83C5BE;
+  color: #83c5be;
 }
 
 .login-btn {
-  background-color: #006D77 !important;
+  background-color: #006d77 !important;
   color: white !important;
 }
 
@@ -214,12 +217,12 @@ onMounted(() => {
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #006D77;
+  color: #006d77;
 }
 
 .hero-description {
   font-size: 1.2rem;
-  color: #E29578;
+  color: #e29578;
   max-width: 800px;
   margin: 0 auto 3rem;
   line-height: 1.6;
@@ -237,20 +240,20 @@ onMounted(() => {
   padding: 2rem;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .feature-image {
   width: 100%;
   height: 200px;
-  background-color: #83C5BE;
+  background-color: #83c5be;
   border-radius: 8px;
   margin-bottom: 1rem;
 }
 
 .feature-card h3 {
   margin-bottom: 1rem;
-  color: #006D77;
+  color: #006d77;
 }
 
 /* Search Section */
@@ -263,7 +266,7 @@ onMounted(() => {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 2rem;
-  color: #006D77;
+  color: #006d77;
 }
 
 .search-form {
@@ -279,7 +282,7 @@ onMounted(() => {
 }
 
 .search-btn {
-  background-color: #006D77 !important;
+  background-color: #006d77 !important;
   color: white !important;
 }
 
@@ -294,7 +297,7 @@ onMounted(() => {
 }
 
 .section-subtitle {
-  color: #E29578;
+  color: #e29578;
   font-style: italic;
   margin-top: 0.5rem;
 }
@@ -309,13 +312,13 @@ onMounted(() => {
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .accommodation-image {
   width: 100%;
   height: 150px;
-  background-color: #83C5BE;
+  background-color: #83c5be;
 }
 
 .accommodation-content {
@@ -324,7 +327,7 @@ onMounted(() => {
 
 .accommodation-location {
   font-weight: bold;
-  color: #006D77;
+  color: #006d77;
   margin-bottom: 0.5rem;
 }
 
@@ -332,7 +335,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #E29578;
+  color: #e29578;
   margin-bottom: 0.5rem;
 }
 
@@ -355,12 +358,12 @@ onMounted(() => {
 
 .price {
   font-weight: bold;
-  color: #006D77;
+  color: #006d77;
 }
 
 /* Footer */
 .footer {
-  background-color: #006D77;
+  background-color: #006d77;
   color: white;
   padding: 2rem 0;
   text-align: center;
@@ -395,7 +398,7 @@ onMounted(() => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #FFDDD2;
+  background-color: #ffddd2;
 }
 
 .copyright {
@@ -409,23 +412,23 @@ onMounted(() => {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .nav {
     gap: 1rem;
   }
-  
+
   .hero-title {
     font-size: 2rem;
   }
-  
+
   .features-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .accommodations-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
-  
+
   .footer-links {
     flex-direction: column;
     gap: 0.5rem;

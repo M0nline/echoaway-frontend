@@ -28,9 +28,9 @@ app.use(pinia)
 app.use(router)
 app.use(Quasar, {
   plugins: {
-    Notify
+    Notify,
   },
-  config: quasarConfig
+  config: quasarConfig,
 })
 
-app.mount('#app') 
+app.mount('#app')

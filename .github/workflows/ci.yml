@@ -2,9 +2,9 @@ name: Frontend CI/CD
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   NODE_VERSION: '20'
@@ -30,6 +30,9 @@ jobs:
 
       - name: Run linting
         run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
 
       - name: Build application
         run: npm run build

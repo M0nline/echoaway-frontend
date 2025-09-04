@@ -11,7 +11,7 @@
       v-model="formData.name"
       label="Titre de l'hébergement"
       outlined
-      :rules="[val => !!val || 'Le titre est obligatoire']"
+      :rules="[(val) => !!val || 'Le titre est obligatoire']"
       aria-required="true"
       aria-describedby="name-error"
       hint="Ex: Chalet des Alpes, Maison de campagne, etc."
@@ -25,7 +25,7 @@
       v-model="formData.address"
       label="Adresse complète"
       outlined
-      :rules="[val => !!val || 'L\'adresse est obligatoire']"
+      :rules="[(val) => !!val || 'L\'adresse est obligatoire']"
       aria-required="true"
       aria-describedby="address-error"
       hint="Numéro et nom de rue"
@@ -41,12 +41,16 @@
           v-model="formData.postalCode"
           label="Code postal"
           outlined
-          :rules="[val => !!val || 'Le code postal est obligatoire']"
+          :rules="[(val) => !!val || 'Le code postal est obligatoire']"
           aria-required="true"
           aria-describedby="postal-error"
           hint="Ex: 75001"
         />
-        <div id="postal-error" class="sr-only" v-if="validationErrors.postalCode">
+        <div
+          id="postal-error"
+          class="sr-only"
+          v-if="validationErrors.postalCode"
+        >
           Erreur: {{ validationErrors.postalCode }}
         </div>
       </div>
@@ -55,7 +59,7 @@
           v-model="formData.city"
           label="Ville *"
           outlined
-          :rules="[val => !!val || 'La ville est obligatoire']"
+          :rules="[(val) => !!val || 'La ville est obligatoire']"
           aria-required="true"
           aria-describedby="city-error"
           hint="Ex: Paris"
@@ -72,7 +76,7 @@
       :options="typeOptions"
       label="Type d'hébergement"
       outlined
-      :rules="[val => !!val || 'Le type est obligatoire']"
+      :rules="[(val) => !!val || 'Le type est obligatoire']"
       aria-required="true"
       aria-describedby="type-error"
       hint="Sélectionnez le type qui correspond le mieux"
@@ -90,7 +94,8 @@
       hint="Niveau de réseau disponible sur place"
     />
     <div id="connectivity-hint" class="sr-only">
-      Zone blanche: pas de réseau, Zone grise: réseau limité, Autre: réseau disponible
+      Zone blanche: pas de réseau, Zone grise: réseau limité, Autre: réseau
+      disponible
     </div>
 
     <!-- Prix par nuit -->
@@ -160,7 +165,7 @@
     <div class="text-subtitle2 text-grey-7 q-mb-sm">
       Contact de réservation (lien OU téléphone obligatoire)
     </div>
-    
+
     <div class="row q-col-gutter-md">
       <div class="col-6">
         <q-input
@@ -189,9 +194,12 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Erreur de contact de réservation -->
-    <div v-if="validationErrors.bookingContact" class="text-negative text-caption q-mt-sm">
+    <div
+      v-if="validationErrors.bookingContact"
+      class="text-negative text-caption q-mt-sm"
+    >
       {{ validationErrors.bookingContact }}
     </div>
   </q-form>
@@ -207,13 +215,13 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  isEditing: false
+  isEditing: false,
 })
 
 // Emits
 const emit = defineEmits<{
   'update:modelValue': [value: AccommodationFormData]
-  'submit': [form: AccommodationFormData]
+  submit: [form: AccommodationFormData]
 }>()
 
 // Types
@@ -236,7 +244,7 @@ interface AccommodationFormData {
 const connectivityOptions = [
   { label: 'Zone blanche', value: 'Zone blanche' },
   { label: 'Zone grise', value: 'Zone grise' },
-  { label: 'Autre', value: 'Autre' }
+  { label: 'Autre', value: 'Autre' },
 ]
 
 const typeOptions = [
@@ -248,7 +256,7 @@ const typeOptions = [
   'Yourte/Tipi',
   'Roulotte',
   'Troglodyte',
-  'Phare/Refuge'
+  'Phare/Refuge',
 ]
 
 // État local du formulaire
@@ -264,34 +272,42 @@ const formData = ref<AccommodationFormData>({
   numberOfBeds: undefined,
   description: '',
   bookingLink: '',
-  phoneNumber: ''
+  phoneNumber: '',
 })
 
 // Erreurs de validation locales
 const validationErrors = ref<Record<string, string>>({})
 
 // Synchronisation bidirectionnelle avec le parent
-watch(() => props.modelValue, (newValue) => {
-  if (newValue) {
-    formData.value = { ...newValue }
-  }
-}, { deep: true, immediate: true })
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue) {
+      formData.value = { ...newValue }
+    }
+  },
+  { deep: true, immediate: true }
+)
 
 // Émettre les changements au parent
-watch(formData, (newValue) => {
-  emit('update:modelValue', { ...newValue })
-}, { deep: true })
+watch(
+  formData,
+  (newValue) => {
+    emit('update:modelValue', { ...newValue })
+  },
+  { deep: true }
+)
 
 // Validation complète du formulaire
 const validateForm = (): boolean => {
   validationErrors.value = {}
-  
+
   // Validation des champs obligatoires
   if (!formData.value.name) {
     validationErrors.value.name = 'Le titre est obligatoire'
   }
   if (!formData.value.address) {
-    validationErrors.value.address = 'L\'adresse est obligatoire'
+    validationErrors.value.address = "L'adresse est obligatoire"
   }
   if (!formData.value.postalCode) {
     validationErrors.value.postalCode = 'Le code postal est obligatoire'
@@ -302,12 +318,13 @@ const validateForm = (): boolean => {
   if (!formData.value.type) {
     validationErrors.value.type = 'Le type est obligatoire'
   }
-  
+
   // Validation du contact de réservation
   if (!formData.value.bookingLink && !formData.value.phoneNumber) {
-    validationErrors.value.bookingContact = 'Un lien de réservation ou un numéro de téléphone est obligatoire'
+    validationErrors.value.bookingContact =
+      'Un lien de réservation ou un numéro de téléphone est obligatoire'
   }
-  
+
   return Object.keys(validationErrors.value).length === 0
 }
 
@@ -343,4 +360,3 @@ const handleSubmit = () => {
   outline-offset: 2px;
 }
 </style>
-

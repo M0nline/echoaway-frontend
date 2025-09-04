@@ -19,8 +19,10 @@
                     label="Nom d'utilisateur"
                     outlined
                     :rules="[
-                      val => !!val || 'Le nom d\'utilisateur est requis',
-                      val => val.length >= 3 || 'Le nom d\'utilisateur doit contenir au moins 3 caractères'
+                      (val) => !!val || 'Le nom d\'utilisateur est requis',
+                      (val) =>
+                        val.length >= 3 ||
+                        'Le nom d\'utilisateur doit contenir au moins 3 caractères',
                     ]"
                     :disable="authStore.loading"
                   >
@@ -35,8 +37,10 @@
                     label="Nom complet"
                     outlined
                     :rules="[
-                      val => !!val || 'Le nom complet est requis',
-                      val => val.length >= 2 || 'Le nom complet doit contenir au moins 2 caractères'
+                      (val) => !!val || 'Le nom complet est requis',
+                      (val) =>
+                        val.length >= 2 ||
+                        'Le nom complet doit contenir au moins 2 caractères',
                     ]"
                     :disable="authStore.loading"
                   >
@@ -53,8 +57,9 @@
                 type="email"
                 outlined
                 :rules="[
-                  val => !!val || 'L\'email est requis',
-                  val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Email invalide'
+                  (val) => !!val || 'L\'email est requis',
+                  (val) =>
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Email invalide',
                 ]"
                 :disable="authStore.loading"
               >
@@ -69,9 +74,13 @@
                 :type="showPassword ? 'text' : 'password'"
                 outlined
                 :rules="[
-                  val => !!val || 'Le mot de passe est requis',
-                  val => val.length >= 8 || 'Le mot de passe doit contenir au moins 8 caractères',
-                  val => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(val) || 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre'
+                  (val) => !!val || 'Le mot de passe est requis',
+                  (val) =>
+                    val.length >= 8 ||
+                    'Le mot de passe doit contenir au moins 8 caractères',
+                  (val) =>
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(val) ||
+                    'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre',
                 ]"
                 :disable="authStore.loading"
               >
@@ -93,8 +102,11 @@
                 :type="showConfirmPassword ? 'text' : 'password'"
                 outlined
                 :rules="[
-                  val => !!val || 'La confirmation du mot de passe est requise',
-                  val => val === form.password || 'Les mots de passe ne correspondent pas'
+                  (val) =>
+                    !!val || 'La confirmation du mot de passe est requise',
+                  (val) =>
+                    val === form.password ||
+                    'Les mots de passe ne correspondent pas',
                 ]"
                 :disable="authStore.loading"
               >
@@ -103,7 +115,9 @@
                 </template>
                 <template v-slot:append>
                   <q-icon
-                    :name="showConfirmPassword ? 'visibility' : 'visibility_off'"
+                    :name="
+                      showConfirmPassword ? 'visibility' : 'visibility_off'
+                    "
                     class="cursor-pointer"
                     @click="showConfirmPassword = !showConfirmPassword"
                   />
@@ -115,7 +129,7 @@
                 :options="roleOptions"
                 label="Rôle"
                 outlined
-                :rules="[val => !!val || 'Le rôle est requis']"
+                :rules="[(val) => !!val || 'Le rôle est requis']"
                 :disable="authStore.loading"
               >
                 <template v-slot:prepend>
@@ -138,7 +152,10 @@
                 v-model="acceptTerms"
                 label="J'accepte les conditions d'utilisation"
                 :disable="authStore.loading"
-                :rules="[val => val || 'Vous devez accepter les conditions d\'utilisation']"
+                :rules="[
+                  (val) =>
+                    val || 'Vous devez accepter les conditions d\'utilisation',
+                ]"
               />
 
               <q-btn
@@ -218,7 +235,7 @@ const handleRegister = async () => {
     }
 
     await authStore.register(userData)
-    
+
     $q.notify({
       type: 'positive',
       message: 'Inscription réussie ! Bienvenue sur EchoAway',
@@ -230,7 +247,7 @@ const handleRegister = async () => {
   } catch (error: any) {
     $q.notify({
       type: 'negative',
-      message: error.message || 'Erreur lors de l\'inscription',
+      message: error.message || "Erreur lors de l'inscription",
       position: 'top',
     })
   }
@@ -244,6 +261,3 @@ const handleRegister = async () => {
   box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
 }
 </style>
-
-
-

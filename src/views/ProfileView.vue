@@ -41,12 +41,7 @@
                 />
               </div>
               <div class="col-12 col-sm-6">
-                <q-input
-                  v-model="profile.role"
-                  label="Rôle"
-                  outlined
-                  readonly
-                >
+                <q-input v-model="profile.role" label="Rôle" outlined readonly>
                   <template v-slot:append>
                     <q-icon name="badge" />
                   </template>
@@ -76,17 +71,8 @@
             <div class="text-h6">Avatar</div>
             <div class="q-mt-md">
               <q-avatar size="120px" class="q-mb-md">
-                <img 
-                  v-if="profile.avatar" 
-                  :src="profile.avatar" 
-                  alt="Avatar"
-                />
-                <q-icon 
-                  v-else 
-                  name="person" 
-                  size="80px" 
-                  color="grey-4"
-                />
+                <img v-if="profile.avatar" :src="profile.avatar" alt="Avatar" />
+                <q-icon v-else name="person" size="80px" color="grey-4" />
               </q-avatar>
             </div>
             <q-btn
@@ -140,19 +126,25 @@
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-4">
                 <div class="text-center">
-                  <div class="text-h4 text-primary">{{ stats.totalAccommodations }}</div>
+                  <div class="text-h4 text-primary">
+                    {{ stats.totalAccommodations }}
+                  </div>
                   <div class="text-body2 text-grey-6">Hébergements</div>
                 </div>
               </div>
               <div class="col-12 col-sm-4">
                 <div class="text-center">
-                  <div class="text-h4 text-secondary">{{ stats.totalBookings }}</div>
+                  <div class="text-h4 text-secondary">
+                    {{ stats.totalBookings }}
+                  </div>
                   <div class="text-body2 text-grey-6">Réservations</div>
                 </div>
               </div>
               <div class="col-12 col-sm-4">
                 <div class="text-center">
-                  <div class="text-h4 text-positive">{{ stats.memberSince }}</div>
+                  <div class="text-h4 text-positive">
+                    {{ stats.memberSince }}
+                  </div>
                   <div class="text-body2 text-grey-6">Membre depuis</div>
                 </div>
               </div>
@@ -185,7 +177,7 @@ const profile = reactive({
     const roleLabels = {
       user: 'Utilisateur',
       host: 'Hôte',
-      admin: 'Administrateur'
+      admin: 'Administrateur',
     }
     return roleLabels[role as keyof typeof roleLabels] || role
   }),
@@ -193,7 +185,7 @@ const profile = reactive({
   lastLoginAt: computed(() => {
     if (!authStore.user?.lastLoginAt) return 'Jamais'
     return new Date(authStore.user.lastLoginAt).toLocaleString('fr-FR')
-  })
+  }),
 })
 
 const stats = reactive({
@@ -202,7 +194,7 @@ const stats = reactive({
   memberSince: computed(() => {
     if (!authStore.user?.createdAt) return 'N/A'
     return new Date(authStore.user.createdAt).toLocaleDateString('fr-FR')
-  })
+  }),
 })
 
 // Méthodes
@@ -211,18 +203,15 @@ const handleLogout = () => {
     title: 'Confirmation',
     message: 'Êtes-vous sûr de vouloir vous déconnecter ?',
     cancel: true,
-    persistent: true
+    persistent: true,
   }).onOk(() => {
     authStore.logout()
     $q.notify({
       type: 'positive',
       message: 'Déconnexion réussie',
-      position: 'top'
+      position: 'top',
     })
     router.push('/login')
   })
 }
 </script>
-
-
-
