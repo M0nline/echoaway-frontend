@@ -2,7 +2,7 @@ import { useAuthStore } from '../stores/auth'
 
 export async function requireAuth(
   to: any,
-  from: any
+  _from: any
 ) {
   const authStore = useAuthStore()
   
@@ -31,7 +31,7 @@ export async function requireAuth(
 
 export async function requireGuest(
   to: any,
-  from: any
+  _from: any
 ) {
   const authStore = useAuthStore()
   
@@ -46,7 +46,7 @@ export async function requireGuest(
 export async function requireRole(
   roles: string[],
   to: any,
-  from: any
+  _from: any
 ) {
   const authStore = useAuthStore()
   

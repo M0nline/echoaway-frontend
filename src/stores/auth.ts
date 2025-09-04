@@ -48,8 +48,6 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('auth_token', data.token)
       
       return data
-    } catch (error) {
-      throw error
     } finally {
       loading.value = false
     }
@@ -73,8 +71,6 @@ export const useAuthStore = defineStore('auth', () => {
       localStorage.setItem('auth_token', data.token)
       
       return data
-    } catch (error) {
-      throw error
     } finally {
       loading.value = false
     }
