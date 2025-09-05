@@ -59,7 +59,7 @@ class ApiService {
   async register(userData: {
     email: string
     password: string
-    login: string
+    firstname: string
     name: string
     role?: 'user' | 'admin' | 'host'
     avatar?: string

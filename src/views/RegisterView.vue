@@ -15,14 +15,14 @@
               <div class="row q-col-gutter-md">
                 <div class="col-12 col-sm-6">
                   <q-input
-                    v-model="form.login"
-                    label="Nom d'utilisateur"
+                    v-model="form.firstname"
+                    label="Prénom"
                     outlined
                     :rules="[
-                      (val) => !!val || 'Le nom d\'utilisateur est requis',
+                      (val) => !!val || 'Le prénom est requis',
                       (val) =>
-                        val.length >= 3 ||
-                        'Le nom d\'utilisateur doit contenir au moins 3 caractères',
+                        val.length >= 2 ||
+                        'Le prénom doit contenir au moins 2 caractères',
                     ]"
                     :disable="authStore.loading"
                   >
@@ -34,13 +34,13 @@
                 <div class="col-12 col-sm-6">
                   <q-input
                     v-model="form.name"
-                    label="Nom complet"
+                    label="Nom de famille"
                     outlined
                     :rules="[
-                      (val) => !!val || 'Le nom complet est requis',
+                      (val) => !!val || 'Le nom de famille est requis',
                       (val) =>
                         val.length >= 2 ||
-                        'Le nom complet doit contenir au moins 2 caractères',
+                        'Le nom de famille doit contenir au moins 2 caractères',
                     ]"
                     :disable="authStore.loading"
                   >
@@ -207,7 +207,7 @@ const showConfirmPassword = ref(false)
 const acceptTerms = ref(false)
 
 const form = reactive({
-  login: '',
+  firstname: '',
   name: '',
   email: '',
   password: '',
@@ -228,7 +228,7 @@ const handleRegister = async () => {
     const userData = {
       email: form.email,
       password: form.password,
-      login: form.login,
+      firstname: form.firstname,
       name: form.name,
       role: form.role,
       avatar: form.avatar || undefined,
