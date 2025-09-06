@@ -2,6 +2,15 @@
 // Utilise la configuration d'environnement
 
 import { config, getApiUrl, validateConfig } from '../config/environment'
+import { type Accommodation, type CreateAccommodationData } from '../types/accommodation'
+
+// Interface pour les erreurs API structurées
+interface ApiError {
+  message: string
+  statusCode?: number
+  error?: string
+  details?: any
+}
 
 class ApiService {
   private baseUrl: string
@@ -16,7 +25,7 @@ class ApiService {
     }
   }
 
-  // Méthode générique pour les appels API
+  // Méthode générique pour les appels API avec gestion d'erreurs améliorée
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -35,15 +44,65 @@ class ApiService {
       const response = await fetch(url, config)
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(
-          errorData.message || `HTTP error! status: ${response.status}`
-        )
+        let errorData: ApiError
+        try {
+          errorData = await response.json()
+        } catch {
+          errorData = {
+            message: `Erreur HTTP ${response.status}: ${response.statusText}`,
+            statusCode: response.status,
+          }
+        }
+
+        // Personnaliser les messages d'erreur selon le code de statut
+        let userMessage = errorData.message
+        switch (response.status) {
+          case 400:
+            userMessage = errorData.message || 'Données invalides. Veuillez vérifier votre saisie.'
+            break
+          case 401:
+            userMessage = 'Vous devez être connecté pour effectuer cette action.'
+            break
+          case 403:
+            userMessage = 'Vous n\'avez pas les droits pour effectuer cette action.'
+            break
+          case 404:
+            userMessage = 'Ressource non trouvée.'
+            break
+          case 409:
+            userMessage = errorData.message || 'Cette ressource existe déjà.'
+            break
+          case 422:
+            userMessage = errorData.message || 'Données de validation incorrectes.'
+            break
+          case 500:
+            userMessage = 'Erreur serveur. Veuillez réessayer plus tard.'
+            break
+          default:
+            userMessage = errorData.message || `Erreur inattendue (${response.status})`
+        }
+
+        const error = new Error(userMessage) as Error & { statusCode?: number; details?: any }
+        error.statusCode = response.status
+        error.details = errorData.details
+        throw error
+      }
+
+      // Gérer les réponses vides (204 No Content)
+      if (response.status === 204) {
+        return {} as T
       }
 
       return await response.json()
     } catch (error) {
       console.error(`❌ API Error for ${endpoint}:`, error)
+      
+      // Si c'est une erreur réseau
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        const networkError = new Error('Impossible de contacter le serveur. Vérifiez votre connexion.')
+        throw networkError
+      }
+      
       throw error
     }
   }
@@ -78,19 +137,23 @@ class ApiService {
     })
   }
 
-  // Méthodes pour les hébergements
-  async getAccommodations() {
+  // Méthodes pour les hébergements avec types stricts
+  async getAccommodations(): Promise<Accommodation[]> {
     // Les hébergements sont accessibles à tous (pas besoin d'auth)
-    return this.request('/accommodations')
+    return this.request<Accommodation[]>('/accommodations')
   }
 
-  async createAccommodation(data: any) {
+  async getAccommodation(id: string): Promise<Accommodation> {
+    return this.request<Accommodation>(`/accommodations/${id}`)
+  }
+
+  async createAccommodation(data: CreateAccommodationData): Promise<Accommodation> {
     const token = this.getAuthToken()
     if (!token) {
-      throw new Error('Token d\'authentification requis')
+      throw new Error('Vous devez être connecté pour créer un hébergement')
     }
     
-    return this.request('/accommodations', {
+    return this.request<Accommodation>('/accommodations', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -99,13 +162,13 @@ class ApiService {
     })
   }
 
-  async updateAccommodation(id: string, data: any) {
+  async updateAccommodation(id: string, data: Partial<CreateAccommodationData>): Promise<Accommodation> {
     const token = this.getAuthToken()
     if (!token) {
-      throw new Error('Token d\'authentification requis')
+      throw new Error('Vous devez être connecté pour modifier un hébergement')
     }
     
-    return this.request(`/accommodations/${id}`, {
+    return this.request<Accommodation>(`/accommodations/${id}`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -114,13 +177,13 @@ class ApiService {
     })
   }
 
-  async deleteAccommodation(id: string) {
+  async deleteAccommodation(id: string): Promise<void> {
     const token = this.getAuthToken()
     if (!token) {
-      throw new Error('Token d\'authentification requis')
+      throw new Error('Vous devez être connecté pour supprimer un hébergement')
     }
     
-    return this.request(`/accommodations/${id}`, {
+    return this.request<void>(`/accommodations/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
