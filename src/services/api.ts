@@ -61,7 +61,7 @@ class ApiService {
     password: string
     firstname: string
     name: string
-    role?: 'user' | 'admin' | 'host'
+    role?: 'admin' | 'host' | 'guest' | 'visitor'
     avatar?: string
   }) {
     return this.request('/auth/register', {

@@ -212,12 +212,13 @@ const form = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  role: 'user' as 'user' | 'admin' | 'host',
+  role: 'visitor' as 'admin' | 'host' | 'guest' | 'visitor',
   avatar: '',
 })
 
 const roleOptions = [
-  { label: 'Utilisateur', value: 'user' },
+  { label: 'Visiteur', value: 'visitor' },
+  { label: 'Invité', value: 'guest' },
   { label: 'Hôte', value: 'host' },
   { label: 'Administrateur', value: 'admin' },
 ]

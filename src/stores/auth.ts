@@ -4,14 +4,14 @@ import { apiService } from '../services/api'
 
 // Types
 export interface User {
-  id: string
+  id: number
   email: string
   firstname: string
   name: string
-  role: 'user' | 'admin' | 'host'
+  role: 'admin' | 'host' | 'guest' | 'visitor'
   avatar?: string
   createdAt: string
-  lastLoginAt?: string
+  updatedAt: string
 }
 
 export interface AuthState {
@@ -30,11 +30,13 @@ export const useAuthStore = defineStore(
 
     // Getters
     const isAuthenticated = computed(() => !!token.value && !!user.value)
-    const userRole = computed(() => user.value?.role || 'user')
+    const userRole = computed(() => user.value?.role || 'visitor')
     const isAdmin = computed(() => userRole.value === 'admin')
     const isHost = computed(
       () => userRole.value === 'host' || userRole.value === 'admin'
     )
+    const isGuest = computed(() => userRole.value === 'guest')
+    const isVisitor = computed(() => userRole.value === 'visitor')
     const fullName = computed(() => {
       if (!user.value) return ''
       return user.value.name
@@ -62,7 +64,7 @@ export const useAuthStore = defineStore(
       password: string
       firstname: string
       name: string
-      role?: 'user' | 'admin' | 'host'
+      role?: 'admin' | 'host' | 'guest' | 'visitor'
       avatar?: string
     }) => {
       loading.value = true
@@ -130,6 +132,8 @@ export const useAuthStore = defineStore(
       userRole,
       isAdmin,
       isHost,
+      isGuest,
+      isVisitor,
       fullName,
 
       // Actions

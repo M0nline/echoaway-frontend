@@ -17,8 +17,8 @@
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-6">
                 <q-input
-                  v-model="profile.login"
-                  label="Nom d'utilisateur"
+                  v-model="profile.firstname"
+                  label="Prénom"
                   outlined
                   readonly
                 />
@@ -49,8 +49,8 @@
               </div>
               <div class="col-12 col-sm-6">
                 <q-input
-                  v-model="profile.lastLoginAt"
-                  label="Dernière connexion"
+                  v-model="profile.createdAt"
+                  label="Date de création du compte"
                   outlined
                   readonly
                 >
@@ -169,22 +169,23 @@ const authStore = useAuthStore()
 
 // État réactif
 const profile = reactive({
-  login: computed(() => authStore.user?.login || ''),
+  firstname: computed(() => authStore.user?.firstname || ''),
   name: computed(() => authStore.user?.name || ''),
   email: computed(() => authStore.user?.email || ''),
   role: computed(() => {
-    const role = authStore.user?.role || 'user'
+    const role = authStore.user?.role || 'visitor'
     const roleLabels = {
-      user: 'Utilisateur',
+      visitor: 'Visiteur',
+      guest: 'Invité',
       host: 'Hôte',
       admin: 'Administrateur',
     }
     return roleLabels[role as keyof typeof roleLabels] || role
   }),
   avatar: computed(() => authStore.user?.avatar || ''),
-  lastLoginAt: computed(() => {
-    if (!authStore.user?.lastLoginAt) return 'Jamais'
-    return new Date(authStore.user.lastLoginAt).toLocaleString('fr-FR')
+  createdAt: computed(() => {
+    if (!authStore.user?.createdAt) return 'Inconnu'
+    return new Date(authStore.user.createdAt).toLocaleString('fr-FR')
   }),
 })
 
