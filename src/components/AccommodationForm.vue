@@ -206,7 +206,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, nextTick } from 'vue'
 import {
   type AccommodationFormData,
   AccommodationType,
@@ -255,12 +255,19 @@ const formData = ref<AccommodationFormData>({
 // Erreurs de validation locales
 const validationErrors = ref<Record<string, string>>({})
 
+// Flag pour éviter les boucles infinies de réactivité
+const isUpdatingFromParent = ref(false)
+
 // Synchronisation bidirectionnelle avec le parent
 watch(
   () => props.modelValue,
   (newValue) => {
-    if (newValue) {
+    if (newValue && !isUpdatingFromParent.value) {
+      isUpdatingFromParent.value = true
       formData.value = { ...newValue }
+      nextTick(() => {
+        isUpdatingFromParent.value = false
+      })
     }
   },
   { deep: true, immediate: true }
@@ -270,7 +277,9 @@ watch(
 watch(
   formData,
   (newValue) => {
-    emit('update:modelValue', { ...newValue })
+    if (!isUpdatingFromParent.value) {
+      emit('update:modelValue', { ...newValue })
+    }
   },
   { deep: true }
 )
