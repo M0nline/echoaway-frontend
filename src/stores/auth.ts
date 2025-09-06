@@ -49,6 +49,9 @@ export const useAuthStore = defineStore(
         })
 
         return data
+      } catch (error) {
+        console.log('❌ Erreur lors de la connexion:', error)
+        throw error // Relancer l'erreur pour qu'elle soit gérée par le composant
       } finally {
         loading.value = false
       }
@@ -73,6 +76,9 @@ export const useAuthStore = defineStore(
         })
 
         return data
+      } catch (error) {
+        console.log('❌ Erreur lors de l\'inscription:', error)
+        throw error // Relancer l'erreur pour qu'elle soit gérée par le composant
       } finally {
         loading.value = false
       }
