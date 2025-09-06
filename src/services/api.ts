@@ -2,6 +2,7 @@
 // Utilise la configuration d'environnement
 
 import { config, getApiUrl, validateConfig } from '../config/environment'
+import type { AuthResponse, LoginRequest, RegisterRequest } from '../types/api'
 
 class ApiService {
   private baseUrl: string
@@ -49,30 +50,23 @@ class ApiService {
   }
 
   // Méthodes pour l'authentification
-  async login(email: string, password: string) {
-    return this.request('/auth/login', {
+  async login(email: string, password: string): Promise<AuthResponse> {
+    return this.request<AuthResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
   }
 
-  async register(userData: {
-    email: string
-    password: string
-    firstname: string
-    name: string
-    role?: 'host' | 'guest'
-    avatar?: string
-  }) {
-    return this.request('/auth/register', {
+  async register(userData: RegisterRequest): Promise<AuthResponse> {
+    return this.request<AuthResponse>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     })
   }
 
-  async getProfile(token: string) {
+  async getProfile(token: string): Promise<AuthResponse> {
     console.log('🌐 API: Appel getProfile avec token:', token?.substring(0, 20) + '...')
-    return this.request('/auth/profile', {
+    return this.request<AuthResponse>('/auth/profile', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

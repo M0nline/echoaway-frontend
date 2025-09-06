@@ -172,7 +172,7 @@
                 label="J'accepte les conditions d'utilisation"
                 :disable="authStore.loading"
                 :rules="[
-                  (val) =>
+                  (val: boolean) =>
                     val || 'Vous devez accepter les conditions d\'utilisation',
                 ]"
               />

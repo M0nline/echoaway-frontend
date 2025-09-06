@@ -1,18 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { apiService } from '../services/api'
-
-// Types
-export interface User {
-  id: number
-  email: string
-  firstname: string
-  name: string
-  role: 'admin' | 'host' | 'guest' | 'visitor'
-  avatar?: string
-  createdAt: string
-  updatedAt: string
-}
+import type { User, AuthResponse, RegisterRequest } from '../types/api'
 
 export interface AuthState {
   user: User | null
@@ -43,11 +32,11 @@ export const useAuthStore = defineStore(
     })
 
     // Actions
-    const login = async (email: string, password: string) => {
+    const login = async (email: string, password: string): Promise<AuthResponse> => {
       loading.value = true
       try {
         console.log('🔐 Tentative de connexion pour:', email)
-        const data = await apiService.login(email, password)
+        const data = await apiService.login(email, password) as AuthResponse
         user.value = data.user
         token.value = data.token
 
@@ -65,18 +54,11 @@ export const useAuthStore = defineStore(
       }
     }
 
-    const register = async (userData: {
-      email: string
-      password: string
-      firstname: string
-      name: string
-      role?: 'host' | 'guest'
-      avatar?: string
-    }) => {
+    const register = async (userData: RegisterRequest): Promise<AuthResponse> => {
       loading.value = true
       try {
         console.log('📝 Tentative d\'inscription pour:', userData.email, 'avec le rôle:', userData.role)
-        const data = await apiService.register(userData)
+        const data = await apiService.register(userData) as AuthResponse
         user.value = data.user
         token.value = data.token
 
@@ -117,7 +99,7 @@ export const useAuthStore = defineStore(
       try {
         console.log('🔍 Vérification de l\'authentification avec le token existant')
         console.log('🔑 Token utilisé:', token.value?.substring(0, 20) + '...')
-        const data = await apiService.getProfile(token.value)
+        const data = await apiService.getProfile(token.value) as AuthResponse
         user.value = data.user
         console.log('✅ Authentification vérifiée:', {
           utilisateur: data.user.email,
@@ -135,7 +117,7 @@ export const useAuthStore = defineStore(
       if (!token.value) return false
 
       try {
-        const data = await apiService.getProfile(token.value)
+        const data = await apiService.getProfile(token.value) as AuthResponse
         user.value = data.user
         return true
       } catch (error) {
@@ -179,7 +161,6 @@ export const useAuthStore = defineStore(
     persist: {
       key: 'echoaway-auth',
       storage: localStorage,
-      paths: ['token', 'user'],
     },
   }
 )

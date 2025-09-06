@@ -1,6 +1,8 @@
 // Utilitaires pour les libellés des rôles utilisateur
 
-export type UserRole = 'admin' | 'host' | 'guest' | 'visitor'
+import type { User } from '../types/api'
+
+export type UserRole = User['role']
 
 export const roleLabels: Record<UserRole, string> = {
   visitor: 'Visiteur',
