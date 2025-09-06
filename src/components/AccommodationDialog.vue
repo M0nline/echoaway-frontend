@@ -9,6 +9,7 @@
 
       <q-card-section>
         <AccommodationForm
+          ref="formRef"
           v-model="formData"
           :is-editing="isEditing"
           @submit="handleFormSubmit"
@@ -130,10 +131,9 @@ watch(
 
 // Déclencher la soumission du formulaire
 const triggerFormSubmit = () => {
-  // Le formulaire gère sa propre validation et soumission
-  // On déclenche juste l'événement submit sur le formulaire
+  // Utiliser la méthode exposée du formulaire pour la validation
   if (formRef.value) {
-    // Le formulaire se validera automatiquement et émettra l'événement submit
+    formRef.value.handleSubmit()
   }
 }
 

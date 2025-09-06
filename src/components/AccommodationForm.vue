@@ -376,6 +376,12 @@ const handleSubmit = () => {
     emit('submit', { ...formData.value })
   }
 }
+
+// Exposer les méthodes pour le parent
+defineExpose({
+  validateForm,
+  handleSubmit
+})
 </script>
 
 <style scoped>
