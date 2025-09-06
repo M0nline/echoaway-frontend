@@ -46,12 +46,19 @@ export const useAuthStore = defineStore(
     const login = async (email: string, password: string) => {
       loading.value = true
       try {
+        console.log('🔐 Tentative de connexion pour:', email)
         const data = await apiService.login(email, password)
         user.value = data.user
         token.value = data.token
 
         // Stocker le token dans localStorage
         localStorage.setItem('auth_token', data.token)
+
+        console.log('✅ Connexion réussie:', {
+          utilisateur: data.user.email,
+          rôle: data.user.role,
+          token: data.token ? 'Présent' : 'Absent',
+        })
 
         return data
       } finally {
@@ -69,12 +76,21 @@ export const useAuthStore = defineStore(
     }) => {
       loading.value = true
       try {
+        console.log('📝 Tentative d\'inscription pour:', userData.email, 'avec le rôle:', userData.role)
         const data = await apiService.register(userData)
         user.value = data.user
         token.value = data.token
 
         // Stocker le token dans localStorage
         localStorage.setItem('auth_token', data.token)
+
+        console.log('✅ Inscription réussie:', {
+          utilisateur: data.user.email,
+          rôle: data.user.role,
+          prénom: data.user.firstname,
+          nom: data.user.name,
+          token: data.token ? 'Présent' : 'Absent',
+        })
 
         return data
       } finally {
@@ -83,21 +99,32 @@ export const useAuthStore = defineStore(
     }
 
     const logout = () => {
+      console.log('🚪 Déconnexion de l\'utilisateur:', user.value?.email || 'Inconnu')
       user.value = null
       token.value = null
       localStorage.removeItem('auth_token')
+      console.log('✅ Déconnexion terminée')
     }
 
     const checkAuth = async () => {
       const storedToken = localStorage.getItem('auth_token')
-      if (!storedToken) return false
+      if (!storedToken) {
+        console.log('🔍 Aucun token trouvé dans localStorage')
+        return false
+      }
 
       try {
+        console.log('🔍 Vérification de l\'authentification avec le token existant')
         const data = await apiService.getProfile(storedToken)
         user.value = data.user
         token.value = storedToken
+        console.log('✅ Authentification vérifiée:', {
+          utilisateur: data.user.email,
+          rôle: data.user.role,
+        })
         return true
       } catch (error) {
+        console.log('❌ Token invalide, déconnexion automatique')
         logout()
         return false
       }
@@ -118,7 +145,9 @@ export const useAuthStore = defineStore(
 
     // Initialiser l'authentification au démarrage
     const initAuth = async () => {
-      await checkAuth()
+      console.log('🚀 Initialisation de l\'authentification...')
+      const isAuthenticated = await checkAuth()
+      console.log('🚀 Initialisation terminée. État:', isAuthenticated ? 'Connecté' : 'Non connecté')
     }
 
     return {
