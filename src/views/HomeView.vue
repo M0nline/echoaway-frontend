@@ -11,16 +11,21 @@
           >
           <a href="#" class="nav-link">Loisirs</a>
         </nav>
-        <router-link to="/login">
-          <q-btn color="dark" label="Connexion" class="login-btn" />
-        </router-link>
+        <div class="auth-buttons">
+          <router-link to="/register">
+            <q-btn color="dark" label="S'inscrire" class="login-btn" />
+          </router-link>
+          <router-link to="/login">
+            <q-btn color="dark" label="Connexion" class="login-btn" />
+          </router-link>
+        </div>
       </div>
     </header>
 
     <!-- Section principale - Besoin de déconnecter -->
     <section class="hero-section">
       <div class="container">
-        <h1 class="hero-title">Besoin de déconnecter ? - CI/CD Test</h1>
+        <h1 class="hero-title">Besoin de déconnecter ?</h1>
         <p class="hero-description">
           EchoAway connecte les voyageurs à la déconnexion. Explorez zones
           blanches, hébergements éco-responsables et activités hors réseau pour
@@ -200,6 +205,12 @@ onMounted(() => {
 .nav a:hover,
 .nav router-link:hover {
   color: #83c5be;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
 }
 
 .login-btn {
