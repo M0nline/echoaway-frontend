@@ -31,6 +31,12 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import AccommodationForm from './AccommodationForm.vue'
+import {
+  type Accommodation,
+  type AccommodationFormData,
+  AccommodationType,
+  ConnectivityType,
+} from '../types/accommodation'
 
 // Props
 interface Props {
@@ -50,41 +56,6 @@ const emit = defineEmits<{
   cancel: []
 }>()
 
-// Types
-interface Accommodation {
-  id: number
-  title: string
-  address: string
-  postalCode: string
-  city: string
-  type: string
-  connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
-  priceMinPerNight: number
-  priceMaxPerNight: number
-  numberOfBeds: number
-  description: string
-  bookingLink?: string
-  phoneNumber?: string
-  hostId: number
-  createdAt: Date | string
-  updatedAt: Date | string
-}
-
-interface AccommodationFormData {
-  title: string
-  address: string
-  postalCode: string
-  city: string
-  type: string
-  connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
-  priceMinPerNight: number
-  priceMaxPerNight: number
-  numberOfBeds: number
-  description: string
-  bookingLink?: string
-  phoneNumber?: string
-}
-
 // État local
 const show = computed({
   get: () => props.modelValue,
@@ -98,8 +69,8 @@ const formData = ref<AccommodationFormData>({
   address: '',
   postalCode: '',
   city: '',
-  type: '',
-  connectivity: 'Zone blanche',
+  type: AccommodationType.HOUSE,
+  connectivity: ConnectivityType.ZONE_BLANCHE,
   priceMinPerNight: 0,
   priceMaxPerNight: 0,
   numberOfBeds: 1,
@@ -118,8 +89,8 @@ const resetForm = () => {
     address: '',
     postalCode: '',
     city: '',
-    type: '',
-    connectivity: 'Zone blanche',
+    type: AccommodationType.HOUSE,
+    connectivity: ConnectivityType.ZONE_BLANCHE,
     priceMinPerNight: 0,
     priceMaxPerNight: 0,
     numberOfBeds: 1,
@@ -141,7 +112,7 @@ watch(
         postalCode: newAccommodation.postalCode || '',
         city: newAccommodation.city || '',
         type: newAccommodation.type || '',
-        connectivity: newAccommodation.connectivity || 'Zone blanche',
+        connectivity: newAccommodation.connectivity || ConnectivityType.ZONE_BLANCHE,
         priceMinPerNight: newAccommodation.priceMinPerNight || 0,
         priceMaxPerNight: newAccommodation.priceMaxPerNight || 0,
         numberOfBeds: newAccommodation.numberOfBeds || 1,

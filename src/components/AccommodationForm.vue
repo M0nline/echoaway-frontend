@@ -207,6 +207,14 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import {
+  type AccommodationFormData,
+  AccommodationType,
+  ConnectivityType,
+  accommodationTypeOptions,
+  connectivityTypeOptions,
+  ValidationRules,
+} from '../types/accommodation'
 
 // Props
 interface Props {
@@ -224,40 +232,9 @@ const emit = defineEmits<{
   submit: [form: AccommodationFormData]
 }>()
 
-// Types
-interface AccommodationFormData {
-  title: string
-  address: string
-  postalCode: string
-  city: string
-  type: string
-  connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
-  priceMinPerNight: number
-  priceMaxPerNight: number
-  numberOfBeds: number
-  description: string
-  bookingLink?: string
-  phoneNumber?: string
-}
-
-// Options pour les selects
-const connectivityOptions = [
-  'Zone blanche',
-  'Zone grise',
-  'Autre',
-]
-
-const typeOptions = [
-  'Appartement',
-  'Maison',
-  'Chalet',
-  'Cabane',
-  'Tiny house',
-  'Yourte/Tipi',
-  'Roulotte',
-  'Troglodyte',
-  'Phare/Refuge',
-]
+// Options pour les selects (utilisation des enums)
+const connectivityOptions = connectivityTypeOptions
+const typeOptions = accommodationTypeOptions
 
 // État local du formulaire
 const formData = ref<AccommodationFormData>({
@@ -265,8 +242,8 @@ const formData = ref<AccommodationFormData>({
   address: '',
   postalCode: '',
   city: '',
-  type: '',
-  connectivity: 'Zone blanche',
+  type: AccommodationType.HOUSE,
+  connectivity: ConnectivityType.ZONE_BLANCHE,
   priceMinPerNight: 0,
   priceMaxPerNight: 0,
   numberOfBeds: 1,
@@ -298,44 +275,78 @@ watch(
   { deep: true }
 )
 
-// Validation complète du formulaire
+// Validation complète du formulaire avec les règles synchronisées
 const validateForm = (): boolean => {
   validationErrors.value = {}
 
-  // Validation des champs obligatoires
+  // Validation du titre
   if (!formData.value.title) {
     validationErrors.value.title = 'Le titre est obligatoire'
+  } else if (formData.value.title.length > ValidationRules.title.maxLength) {
+    validationErrors.value.title = `Le titre ne peut pas dépasser ${ValidationRules.title.maxLength} caractères`
   }
+
+  // Validation de l'adresse
   if (!formData.value.address) {
     validationErrors.value.address = "L'adresse est obligatoire"
+  } else if (formData.value.address.length > ValidationRules.address.maxLength) {
+    validationErrors.value.address = `L'adresse ne peut pas dépasser ${ValidationRules.address.maxLength} caractères`
   }
+
+  // Validation du code postal
   if (!formData.value.postalCode) {
     validationErrors.value.postalCode = 'Le code postal est obligatoire'
+  } else if (formData.value.postalCode.length > ValidationRules.postalCode.maxLength) {
+    validationErrors.value.postalCode = `Le code postal ne peut pas dépasser ${ValidationRules.postalCode.maxLength} caractères`
+  } else if (!ValidationRules.postalCode.pattern.test(formData.value.postalCode)) {
+    validationErrors.value.postalCode = 'Le code postal doit être composé de 5 chiffres'
   }
+
+  // Validation de la ville
   if (!formData.value.city) {
     validationErrors.value.city = 'La ville est obligatoire'
+  } else if (formData.value.city.length > ValidationRules.city.maxLength) {
+    validationErrors.value.city = `La ville ne peut pas dépasser ${ValidationRules.city.maxLength} caractères`
   }
+
+  // Validation du type
   if (!formData.value.type) {
     validationErrors.value.type = 'Le type est obligatoire'
   }
+
+  // Validation de la description
   if (!formData.value.description) {
     validationErrors.value.description = 'La description est obligatoire'
+  } else if (formData.value.description.length > ValidationRules.description.maxLength) {
+    validationErrors.value.description = `La description ne peut pas dépasser ${ValidationRules.description.maxLength} caractères`
   }
 
   // Validation des prix
-  if (formData.value.priceMinPerNight < 0) {
+  if (formData.value.priceMinPerNight < ValidationRules.priceMinPerNight.min) {
     validationErrors.value.priceMinPerNight = 'Le prix minimum ne peut pas être négatif'
   }
-  if (formData.value.priceMaxPerNight < 0) {
+  if (formData.value.priceMaxPerNight < ValidationRules.priceMaxPerNight.min) {
     validationErrors.value.priceMaxPerNight = 'Le prix maximum ne peut pas être négatif'
   }
-  if (formData.value.priceMinPerNight > formData.value.priceMaxPerNight) {
+  if (formData.value.priceMinPerNight > formData.value.priceMaxPerNight && formData.value.priceMaxPerNight > 0) {
     validationErrors.value.priceMaxPerNight = 'Le prix maximum doit être supérieur au prix minimum'
   }
 
   // Validation du nombre de couchages
-  if (formData.value.numberOfBeds < 1) {
-    validationErrors.value.numberOfBeds = 'Le nombre de couchages doit être d\'au moins 1'
+  if (formData.value.numberOfBeds < ValidationRules.numberOfBeds.min) {
+    validationErrors.value.numberOfBeds = `Le nombre de couchages doit être d'au moins ${ValidationRules.numberOfBeds.min}`
+  } else if (formData.value.numberOfBeds > ValidationRules.numberOfBeds.max) {
+    validationErrors.value.numberOfBeds = `Le nombre de couchages ne peut pas dépasser ${ValidationRules.numberOfBeds.max}`
+  }
+
+  // Validation du lien de réservation
+  if (formData.value.bookingLink && !ValidationRules.bookingLink.pattern.test(formData.value.bookingLink)) {
+    validationErrors.value.bookingLink = 'Le lien de réservation doit être une URL valide (http:// ou https://)'
+  }
+
+  // Validation du numéro de téléphone
+  if (formData.value.phoneNumber && !ValidationRules.phoneNumber.pattern.test(formData.value.phoneNumber)) {
+    validationErrors.value.phoneNumber = 'Le numéro de téléphone doit être un numéro français valide'
   }
 
   // Validation du contact de réservation

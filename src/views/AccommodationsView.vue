@@ -181,26 +181,12 @@ import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth'
 import { apiService } from '../services/api'
 import AccommodationDialog from '../components/AccommodationDialog.vue'
-
-// Types
-interface Accommodation {
-  id: number
-  title: string
-  address: string
-  postalCode: string
-  city: string
-  type: string
-  connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
-  priceMinPerNight: number
-  priceMaxPerNight: number
-  numberOfBeds: number
-  description: string
-  bookingLink?: string
-  phoneNumber?: string
-  hostId: number
-  createdAt: Date | string
-  updatedAt: Date | string
-}
+import {
+  type Accommodation,
+  type AccommodationFormData,
+  accommodationTypeOptions,
+  connectivityTypeOptions,
+} from '../types/accommodation'
 
 // Composables
 const $q = useQuasar()
@@ -218,24 +204,9 @@ const filters = reactive({
   type: null as string | null,
 })
 
-// Options pour les selects (utilisées par le composant AccommodationForm)
-const connectivityOptions = [
-  'Zone blanche',
-  'Zone grise', 
-  'Autre',
-]
-
-const typeOptions = [
-  'Appartement',
-  'Maison',
-  'Chalet',
-  'Cabane',
-  'Tiny house',
-  'Yourte/Tipi',
-  'Roulotte',
-  'Troglodyte',
-  'Phare/Refuge',
-]
+// Options pour les selects (utilisation des enums partagés)
+const connectivityOptions = connectivityTypeOptions
+const typeOptions = accommodationTypeOptions
 
 // Méthodes
 const loadAccommodations = async () => {
@@ -255,7 +226,7 @@ const loadAccommodations = async () => {
   }
 }
 
-const saveAccommodation = async (formData: any) => {
+const saveAccommodation = async (formData: AccommodationFormData) => {
   try {
     if (editingAccommodation.value) {
       // Mise à jour
@@ -268,19 +239,8 @@ const saveAccommodation = async (formData: any) => {
         message: 'Hébergement modifié avec succès',
       })
     } else {
-      // Création - ajouter l'hostId depuis le store d'auth
-      const authStore = useAuthStore()
-      const userData = authStore.user
-      if (!userData) {
-        throw new Error('Utilisateur non connecté')
-      }
-      
-      const accommodationData = {
-        ...formData,
-        hostId: parseInt(userData.id)
-      }
-      
-      await apiService.createAccommodation(accommodationData)
+      // Création - le hostId sera ajouté automatiquement côté backend
+      await apiService.createAccommodation(formData)
       $q.notify({
         type: 'positive',
         message: 'Hébergement créé avec succès',
