@@ -161,6 +161,7 @@ import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth'
+import { getRoleLabel } from '../utils/roleLabels'
 
 // Composables
 const router = useRouter()
@@ -174,13 +175,7 @@ const profile = reactive({
   email: computed(() => authStore.user?.email || ''),
   role: computed(() => {
     const role = authStore.user?.role || 'visitor'
-    const roleLabels = {
-      visitor: 'Visiteur',
-      guest: 'Invité',
-      host: 'Hôte',
-      admin: 'Administrateur',
-    }
-    return roleLabels[role as keyof typeof roleLabels] || role
+    return getRoleLabel(role)
   }),
   avatar: computed(() => authStore.user?.avatar || ''),
   createdAt: computed(() => {

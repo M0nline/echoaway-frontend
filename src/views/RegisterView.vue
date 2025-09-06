@@ -127,7 +127,7 @@
               <q-select
                 v-model="form.role"
                 :options="roleOptions"
-                label="Rôle"
+                label="Je suis :"
                 outlined
                 :rules="[(val) => !!val || 'Le rôle est requis']"
                 :disable="authStore.loading"
@@ -212,15 +212,13 @@ const form = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  role: 'visitor' as 'admin' | 'host' | 'guest' | 'visitor',
+  role: 'guest' as 'host' | 'guest',
   avatar: '',
 })
 
 const roleOptions = [
-  { label: 'Visiteur', value: 'visitor' },
-  { label: 'Invité', value: 'guest' },
+  { label: 'Voyageur', value: 'guest' },
   { label: 'Hôte', value: 'host' },
-  { label: 'Administrateur', value: 'admin' },
 ]
 
 // Méthodes

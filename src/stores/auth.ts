@@ -64,7 +64,7 @@ export const useAuthStore = defineStore(
       password: string
       firstname: string
       name: string
-      role?: 'admin' | 'host' | 'guest' | 'visitor'
+      role?: 'host' | 'guest'
       avatar?: string
     }) => {
       loading.value = true
