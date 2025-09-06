@@ -71,6 +71,7 @@ class ApiService {
   }
 
   async getProfile(token: string) {
+    console.log('🌐 API: Appel getProfile avec token:', token?.substring(0, 20) + '...')
     return this.request('/auth/profile', {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -130,8 +131,17 @@ class ApiService {
 
   // Méthode utilitaire pour récupérer le token d'authentification
   private getAuthToken(): string | null {
-    // Récupérer le token depuis le localStorage ou le store d'auth
-    return localStorage.getItem('auth_token') || null
+    // Récupérer le token depuis le localStorage (clé Pinia)
+    const authData = localStorage.getItem('echoaway-auth')
+    if (authData) {
+      try {
+        const parsed = JSON.parse(authData)
+        return parsed.token || null
+      } catch {
+        return null
+      }
+    }
+    return null
   }
 
   // Méthode pour vérifier la connectivité

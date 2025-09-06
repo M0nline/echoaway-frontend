@@ -51,8 +51,7 @@ export const useAuthStore = defineStore(
         user.value = data.user
         token.value = data.token
 
-        // Stocker le token dans localStorage
-        localStorage.setItem('auth_token', data.token)
+        // Le token sera automatiquement persisté par Pinia
 
         console.log('✅ Connexion réussie:', {
           utilisateur: data.user.email,
@@ -81,8 +80,7 @@ export const useAuthStore = defineStore(
         user.value = data.user
         token.value = data.token
 
-        // Stocker le token dans localStorage
-        localStorage.setItem('auth_token', data.token)
+        // Le token sera automatiquement persisté par Pinia
 
         console.log('✅ Inscription réussie:', {
           utilisateur: data.user.email,
@@ -102,22 +100,25 @@ export const useAuthStore = defineStore(
       console.log('🚪 Déconnexion de l\'utilisateur:', user.value?.email || 'Inconnu')
       user.value = null
       token.value = null
-      localStorage.removeItem('auth_token')
+      // Le token sera automatiquement supprimé par Pinia
       console.log('✅ Déconnexion terminée')
     }
 
     const checkAuth = async () => {
-      const storedToken = localStorage.getItem('auth_token')
-      if (!storedToken) {
-        console.log('🔍 Aucun token trouvé dans localStorage')
+      // Utiliser le token du store Pinia (qui est persisté automatiquement)
+      console.log('🔍 Vérification du token dans le store:', token.value ? 'Présent' : 'Absent')
+      console.log('🔍 Contenu localStorage echoaway-auth:', localStorage.getItem('echoaway-auth'))
+      
+      if (!token.value) {
+        console.log('🔍 Aucun token trouvé dans le store')
         return false
       }
 
       try {
         console.log('🔍 Vérification de l\'authentification avec le token existant')
-        const data = await apiService.getProfile(storedToken)
+        console.log('🔑 Token utilisé:', token.value?.substring(0, 20) + '...')
+        const data = await apiService.getProfile(token.value)
         user.value = data.user
-        token.value = storedToken
         console.log('✅ Authentification vérifiée:', {
           utilisateur: data.user.email,
           rôle: data.user.role,
