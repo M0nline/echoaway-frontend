@@ -1,18 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { apiService } from '../services/api'
-
-// Types
-export interface User {
-  id: string
-  email: string
-  firstname: string
-  name: string
-  role: 'user' | 'admin' | 'host'
-  avatar?: string
-  createdAt: string
-  lastLoginAt?: string
-}
+import type { User, AuthResponse, RegisterRequest } from '../types/api'
 
 export interface AuthState {
   user: User | null
@@ -30,72 +19,122 @@ export const useAuthStore = defineStore(
 
     // Getters
     const isAuthenticated = computed(() => !!token.value && !!user.value)
-    const userRole = computed(() => user.value?.role || 'user')
+    const userRole = computed(() => user.value?.role || 'visitor')
     const isAdmin = computed(() => userRole.value === 'admin')
     const isHost = computed(
       () => userRole.value === 'host' || userRole.value === 'admin'
     )
+    const isGuest = computed(() => userRole.value === 'guest')
+    const isVisitor = computed(() => userRole.value === 'visitor')
     const fullName = computed(() => {
       if (!user.value) return ''
       return user.value.name
     })
 
     // Actions
-    const login = async (email: string, password: string) => {
+    const login = async (
+      email: string,
+      password: string
+    ): Promise<AuthResponse> => {
       loading.value = true
       try {
-        const data = await apiService.login(email, password)
+        console.log('🔐 Tentative de connexion pour:', email)
+        const data = (await apiService.login(email, password)) as AuthResponse
         user.value = data.user
         token.value = data.token
 
-        // Stocker le token dans localStorage
-        localStorage.setItem('auth_token', data.token)
+        // Le token sera automatiquement persisté par Pinia
+
+        console.log('✅ Connexion réussie:', {
+          utilisateur: data.user.email,
+          rôle: data.user.role,
+          token: data.token ? 'Présent' : 'Absent',
+        })
 
         return data
+      } catch (error) {
+        console.log('❌ Erreur lors de la connexion:', error)
+        throw error // Relancer l'erreur pour qu'elle soit gérée par le composant
       } finally {
         loading.value = false
       }
     }
 
-    const register = async (userData: {
-      email: string
-      password: string
-      firstname: string
-      name: string
-      role?: 'user' | 'admin' | 'host'
-      avatar?: string
-    }) => {
+    const register = async (
+      userData: RegisterRequest
+    ): Promise<AuthResponse> => {
       loading.value = true
       try {
-        const data = await apiService.register(userData)
+        console.log(
+          "📝 Tentative d'inscription pour:",
+          userData.email,
+          'avec le rôle:',
+          userData.role
+        )
+        const data = (await apiService.register(userData)) as AuthResponse
         user.value = data.user
         token.value = data.token
 
-        // Stocker le token dans localStorage
-        localStorage.setItem('auth_token', data.token)
+        // Le token sera automatiquement persisté par Pinia
+
+        console.log('✅ Inscription réussie:', {
+          utilisateur: data.user.email,
+          rôle: data.user.role,
+          prénom: data.user.firstname,
+          nom: data.user.name,
+          token: data.token ? 'Présent' : 'Absent',
+        })
 
         return data
+      } catch (error) {
+        console.log("❌ Erreur lors de l'inscription:", error)
+        throw error // Relancer l'erreur pour qu'elle soit gérée par le composant
       } finally {
         loading.value = false
       }
     }
 
     const logout = () => {
+      console.log(
+        "🚪 Déconnexion de l'utilisateur:",
+        user.value?.email || 'Inconnu'
+      )
       user.value = null
       token.value = null
-      localStorage.removeItem('auth_token')
+      // Le token sera automatiquement supprimé par Pinia
+      console.log('✅ Déconnexion terminée')
     }
 
     const checkAuth = async () => {
-      const storedToken = localStorage.getItem('auth_token')
-      if (!storedToken) return false
+      // Utiliser le token du store Pinia (qui est persisté automatiquement)
+      console.log(
+        '🔍 Vérification du token dans le store:',
+        token.value ? 'Présent' : 'Absent'
+      )
+      console.log(
+        '🔍 Contenu localStorage echoaway-auth:',
+        localStorage.getItem('echoaway-auth')
+      )
+
+      if (!token.value) {
+        console.log('🔍 Aucun token trouvé dans le store')
+        return false
+      }
 
       try {
-        const data = await apiService.getProfile(storedToken)
+        console.log(
+          "🔍 Vérification de l'authentification avec le token existant"
+        )
+        console.log('🔑 Token utilisé:', token.value?.substring(0, 20) + '...')
+        const data = (await apiService.getProfile(token.value)) as AuthResponse
         user.value = data.user
-        token.value = storedToken
+        console.log('✅ Authentification vérifiée:', {
+          utilisateur: data.user.email,
+          rôle: data.user.role,
+        })
         return true
       } catch (error) {
+        console.log('❌ Token invalide, déconnexion automatique')
         logout()
         return false
       }
@@ -105,7 +144,7 @@ export const useAuthStore = defineStore(
       if (!token.value) return false
 
       try {
-        const data = await apiService.getProfile(token.value)
+        const data = (await apiService.getProfile(token.value)) as AuthResponse
         user.value = data.user
         return true
       } catch (error) {
@@ -116,7 +155,12 @@ export const useAuthStore = defineStore(
 
     // Initialiser l'authentification au démarrage
     const initAuth = async () => {
-      await checkAuth()
+      console.log("🚀 Initialisation de l'authentification...")
+      const isAuthenticated = await checkAuth()
+      console.log(
+        '🚀 Initialisation terminée. État:',
+        isAuthenticated ? 'Connecté' : 'Non connecté'
+      )
     }
 
     return {
@@ -130,6 +174,8 @@ export const useAuthStore = defineStore(
       userRole,
       isAdmin,
       isHost,
+      isGuest,
+      isVisitor,
       fullName,
 
       // Actions
@@ -145,7 +191,6 @@ export const useAuthStore = defineStore(
     persist: {
       key: 'echoaway-auth',
       storage: localStorage,
-      paths: ['token', 'user'],
     },
   }
 )

@@ -4,6 +4,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { Quasar, Notify } from 'quasar'
 import router from './router'
 import App from './App.vue'
+import { useAuthStore } from './stores/auth'
 
 // Import Quasar css
 import '@quasar/extras/material-icons/material-icons.css'
@@ -33,4 +34,9 @@ app.use(Quasar, {
   config: quasarConfig,
 })
 
-app.mount('#app')
+// Initialiser l'authentification avant de monter l'app
+const authStore = useAuthStore()
+authStore.initAuth().then(() => {
+  console.log('🚀 Application démarrée avec authentification initialisée')
+  app.mount('#app')
+})

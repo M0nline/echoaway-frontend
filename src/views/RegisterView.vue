@@ -127,7 +127,11 @@
               <q-select
                 v-model="form.role"
                 :options="roleOptions"
-                label="Rôle"
+                option-value="value"
+                option-label="label"
+                emit-value
+                map-options
+                label="Je suis :"
                 outlined
                 :rules="[(val) => !!val || 'Le rôle est requis']"
                 :disable="authStore.loading"
@@ -137,23 +141,38 @@
                 </template>
               </q-select>
 
-              <q-input
-                v-model="form.avatar"
-                label="URL de l'avatar (optionnel)"
+              <q-file
+                v-model="form.avatarFile"
+                label="Photo de profil (optionnel)"
                 outlined
+                accept="image/*"
+                max-file-size="5242880"
                 :disable="authStore.loading"
+                @rejected="onFileRejected"
+                @update:model-value="onAvatarFileSelected"
               >
                 <template v-slot:prepend>
-                  <q-icon name="image" />
+                  <q-icon name="photo_camera" />
                 </template>
-              </q-input>
+                <template v-slot:hint>
+                  Formats acceptés: JPG, PNG, GIF (max 5MB)
+                </template>
+              </q-file>
+
+              <!-- Aperçu de l'avatar sélectionné -->
+              <div v-if="avatarPreview" class="q-mt-md text-center">
+                <div class="text-caption text-grey-6 q-mb-sm">Aperçu :</div>
+                <q-avatar size="80px">
+                  <img :src="avatarPreview" alt="Aperçu avatar" />
+                </q-avatar>
+              </div>
 
               <q-checkbox
                 v-model="acceptTerms"
                 label="J'accepte les conditions d'utilisation"
                 :disable="authStore.loading"
                 :rules="[
-                  (val) =>
+                  (val: boolean) =>
                     val || 'Vous devez accepter les conditions d\'utilisation',
                 ]"
               />
@@ -205,6 +224,7 @@ const authStore = useAuthStore()
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const acceptTerms = ref(false)
+const avatarPreview = ref<string | null>(null)
 
 const form = reactive({
   firstname: '',
@@ -212,26 +232,54 @@ const form = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  role: 'user' as 'user' | 'admin' | 'host',
-  avatar: '',
+  role: 'guest' as 'host' | 'guest',
+  avatarFile: null as File | null,
 })
 
 const roleOptions = [
-  { label: 'Utilisateur', value: 'user' },
+  { label: 'Voyageur', value: 'guest' },
   { label: 'Hôte', value: 'host' },
-  { label: 'Administrateur', value: 'admin' },
 ]
 
 // Méthodes
+const onFileRejected = (_rejectedEntries: any[]) => {
+  $q.notify({
+    type: 'negative',
+    message: 'Fichier rejeté. Vérifiez le format et la taille (max 5MB)',
+    position: 'top',
+  })
+}
+
+const onAvatarFileSelected = (file: File | null) => {
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      avatarPreview.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+  } else {
+    avatarPreview.value = null
+  }
+}
+
 const handleRegister = async () => {
   try {
+    let avatarUrl: string | undefined
+
+    // Si un fichier avatar est sélectionné, l'uploader
+    if (form.avatarFile) {
+      // Pour l'instant, on convertit en base64 pour simplifier
+      // Dans une vraie app, on uploaderait vers un service cloud
+      avatarUrl = await convertFileToBase64(form.avatarFile)
+    }
+
     const userData = {
       email: form.email,
       password: form.password,
       firstname: form.firstname,
       name: form.name,
       role: form.role,
-      avatar: form.avatar || undefined,
+      avatar: avatarUrl,
     }
 
     await authStore.register(userData)
@@ -251,6 +299,23 @@ const handleRegister = async () => {
       position: 'top',
     })
   }
+}
+
+// Fonction utilitaire pour convertir un fichier en base64
+const convertFileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result)
+      } else {
+        reject(new Error('Erreur lors de la conversion du fichier'))
+      }
+    }
+    reader.onerror = () =>
+      reject(new Error('Erreur lors de la lecture du fichier'))
+    reader.readAsDataURL(file)
+  })
 }
 </script>
 

@@ -241,11 +241,7 @@ interface AccommodationFormData {
 }
 
 // Options pour les selects
-const connectivityOptions = [
-  'Zone blanche',
-  'Zone grise',
-  'Autre',
-]
+const connectivityOptions = ['Zone blanche', 'Zone grise', 'Autre']
 
 const typeOptions = [
   'Appartement',
@@ -324,18 +320,22 @@ const validateForm = (): boolean => {
 
   // Validation des prix
   if (formData.value.priceMinPerNight < 0) {
-    validationErrors.value.priceMinPerNight = 'Le prix minimum ne peut pas être négatif'
+    validationErrors.value.priceMinPerNight =
+      'Le prix minimum ne peut pas être négatif'
   }
   if (formData.value.priceMaxPerNight < 0) {
-    validationErrors.value.priceMaxPerNight = 'Le prix maximum ne peut pas être négatif'
+    validationErrors.value.priceMaxPerNight =
+      'Le prix maximum ne peut pas être négatif'
   }
   if (formData.value.priceMinPerNight > formData.value.priceMaxPerNight) {
-    validationErrors.value.priceMaxPerNight = 'Le prix maximum doit être supérieur au prix minimum'
+    validationErrors.value.priceMaxPerNight =
+      'Le prix maximum doit être supérieur au prix minimum'
   }
 
   // Validation du nombre de couchages
   if (formData.value.numberOfBeds < 1) {
-    validationErrors.value.numberOfBeds = 'Le nombre de couchages doit être d\'au moins 1'
+    validationErrors.value.numberOfBeds =
+      "Le nombre de couchages doit être d'au moins 1"
   }
 
   // Validation du contact de réservation

@@ -100,7 +100,8 @@
                       {{ accommodation.title }}
                     </div>
                     <div class="text-subtitle2 text-grey-6 q-mt-xs">
-                      {{ accommodation.address }}, {{ accommodation.postalCode }} {{ accommodation.city }}
+                      {{ accommodation.address }},
+                      {{ accommodation.postalCode }} {{ accommodation.city }}
                     </div>
                     <div class="q-mt-md">
                       <q-chip
@@ -116,15 +117,24 @@
                       <q-chip color="secondary" text-color="white" size="sm">
                         {{ accommodation.type }}
                       </q-chip>
-                      <q-chip color="info" text-color="white" size="sm" class="q-ml-xs">
+                      <q-chip
+                        color="info"
+                        text-color="white"
+                        size="sm"
+                        class="q-ml-xs"
+                      >
                         {{ accommodation.numberOfBeds }} couchages
                       </q-chip>
                     </div>
                     <div
-                      v-if="accommodation.priceMinPerNight && accommodation.priceMaxPerNight"
+                      v-if="
+                        accommodation.priceMinPerNight &&
+                        accommodation.priceMaxPerNight
+                      "
                       class="text-h6 text-primary q-mt-md"
                     >
-                      {{ accommodation.priceMinPerNight }}€ - {{ accommodation.priceMaxPerNight }}€ / nuit
+                      {{ accommodation.priceMinPerNight }}€ -
+                      {{ accommodation.priceMaxPerNight }}€ / nuit
                     </div>
                     <div
                       v-else-if="accommodation.priceMinPerNight"
@@ -219,11 +229,7 @@ const filters = reactive({
 })
 
 // Options pour les selects (utilisées par le composant AccommodationForm)
-const connectivityOptions = [
-  'Zone blanche',
-  'Zone grise', 
-  'Autre',
-]
+const connectivityOptions = ['Zone blanche', 'Zone grise', 'Autre']
 
 const typeOptions = [
   'Appartement',
@@ -274,12 +280,12 @@ const saveAccommodation = async (formData: any) => {
       if (!userData) {
         throw new Error('Utilisateur non connecté')
       }
-      
+
       const accommodationData = {
         ...formData,
-        hostId: parseInt(userData.id)
+        hostId: parseInt(userData.id),
       }
-      
+
       await apiService.createAccommodation(accommodationData)
       $q.notify({
         type: 'positive',

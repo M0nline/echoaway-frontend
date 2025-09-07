@@ -24,7 +24,7 @@ This repository contains only the **frontend** of the EchoAway application:
 ## 🚀 Quick Start
 
 > **⚠️ IMPORTANT** : This repository does NOT contain the main `docker-compose.yml`.
-> 
+>
 > To launch the complete application, see the [Backend README](../echoaway-backend/README.md).
 
 ### Frontend Only Startup
@@ -118,6 +118,7 @@ The project uses a centralized API service (`src/services/api.ts`) that:
 ## 🎨 Frontend Architecture
 
 ### Components
+
 - **Views** : Main application pages
 - **Components** : Reusable components (see [COMPONENTS.md](./COMPONENTS.md))
 - **Stores** : Centralized state management with Pinia
@@ -125,11 +126,13 @@ The project uses a centralized API service (`src/services/api.ts`) that:
 - **Router** : Navigation and route protection
 
 ### Application State
+
 - **AuthStore** : Authentication management
 - **JWT Token** : Secure session storage
 - **User** : Connected user information
 
 ### Security
+
 - **Guards** : Sensitive route protection
 - **Validation** : Input data verification
 - **CORS** : Backend communication configuration

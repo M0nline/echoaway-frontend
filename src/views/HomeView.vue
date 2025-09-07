@@ -11,16 +11,56 @@
           >
           <a href="#" class="nav-link">Loisirs</a>
         </nav>
-        <router-link to="/login">
-          <q-btn color="dark" label="Connexion" class="login-btn" />
-        </router-link>
+        <!-- Boutons d'authentification (non connecté) -->
+        <div v-if="!authStatus.isAuthenticated" class="auth-buttons">
+          <router-link to="/register">
+            <q-btn color="dark" label="S'inscrire" class="login-btn" />
+          </router-link>
+          <router-link to="/login">
+            <q-btn color="dark" label="Connexion" class="login-btn" />
+          </router-link>
+        </div>
+
+        <!-- Menu utilisateur (connecté) -->
+        <div v-else class="user-menu">
+          <q-btn-dropdown
+            color="dark"
+            :label="authStatus.user?.firstname || 'Utilisateur'"
+            class="user-dropdown"
+          >
+            <q-list>
+              <q-item clickable v-close-popup @click="$router.push('/profile')">
+                <q-item-section avatar>
+                  <q-icon name="person" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Mon profil</q-item-label>
+                  <q-item-label caption>{{
+                    authStatus.roleLabel
+                  }}</q-item-label>
+                </q-item-section>
+              </q-item>
+
+              <q-separator />
+
+              <q-item clickable v-close-popup @click="handleLogout">
+                <q-item-section avatar>
+                  <q-icon name="logout" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>Se déconnecter</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </div>
       </div>
     </header>
 
     <!-- Section principale - Besoin de déconnecter -->
     <section class="hero-section">
       <div class="container">
-        <h1 class="hero-title">Besoin de déconnecter ? - CI/CD Test</h1>
+        <h1 class="hero-title">Besoin de déconnecter ?</h1>
         <p class="hero-description">
           EchoAway connecte les voyageurs à la déconnexion. Explorez zones
           blanches, hébergements éco-responsables et activités hors réseau pour
@@ -130,13 +170,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useAuthStore } from '../stores/auth'
+import { getRoleLabel } from '../utils/roleLabels'
 
+const authStore = useAuthStore()
 const searchLocation = ref('')
 const searchType = ref('')
 
+// Computed pour l'état de connexion
+const authStatus = computed(() => ({
+  isAuthenticated: authStore.isAuthenticated,
+  user: authStore.user,
+  role: authStore.userRole,
+  roleLabel: getRoleLabel(authStore.userRole),
+}))
+
+// Méthodes
+const handleLogout = () => {
+  console.log('🚪 Déconnexion demandée depuis HomeView')
+  authStore.logout()
+  // L'interface se mettra à jour automatiquement grâce à la réactivité
+}
+
 onMounted(() => {
-  console.log('HomeView mounted')
+  console.log('🏠 HomeView mounted')
+  console.log("🔐 État d'authentification:", {
+    connecté: authStatus.value.isAuthenticated,
+    utilisateur: authStatus.value.user?.email || 'Aucun',
+    rôle: authStatus.value.role,
+    'libellé du rôle': authStatus.value.roleLabel,
+  })
+
+  // Log détaillé de l'utilisateur si connecté
+  if (authStatus.value.isAuthenticated && authStatus.value.user) {
+    console.log('👤 Détails utilisateur:', {
+      id: authStatus.value.user.id,
+      email: authStatus.value.user.email,
+      prénom: authStatus.value.user.firstname,
+      nom: authStatus.value.user.name,
+      rôle: authStatus.value.user.role,
+      avatar: authStatus.value.user.avatar ? 'Défini' : 'Non défini',
+      'créé le': authStatus.value.user.createdAt,
+    })
+  }
 })
 </script>
 
@@ -202,7 +279,23 @@ onMounted(() => {
   color: #83c5be;
 }
 
+.auth-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
 .login-btn {
+  background-color: #006d77 !important;
+  color: white !important;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+}
+
+.user-dropdown {
   background-color: #006d77 !important;
   color: white !important;
 }
