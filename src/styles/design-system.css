@@ -8,7 +8,8 @@
   --echoaway-primary: #e29578; /* Orange terreux - couleur principale */
   --echoaway-secondary: #ffddd2; /* Rose très clair - couleur secondaire */
   --echoaway-accent: #006d77; /* Bleu-vert foncé - accent */
-  --echoaway-light: #edf8f9; /* Bleu très pâle - fond clair */
+  --echoaway-light: #fef7f3; /* Rose très clair atténué - fond clair */
+  --echoaway-white: #ffffff; /* Blanc pur */
   --echoaway-warm: #83c5be; /* Bleu-vert clair - tons chauds */
   --echoaway-dark: #2c3e50; /* Bleu-gris foncé - texte */
   --echoaway-dark-page: #fef7f3; /* Rose très clair atténué - fond page chaleureux */
