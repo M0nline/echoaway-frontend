@@ -2,7 +2,10 @@
   <AppLayout>
     <PageLayout>
       <!-- En-tête profil -->
-      <ProfileHeader @edit-profile="handleEditProfile" />
+      <ProfileHeader 
+        @edit-profile="handleEditProfile" 
+        @logout="handleLogout" 
+      />
 
       <!-- Section informations personnelles -->
       <section class="section">
@@ -32,50 +35,19 @@
                   outlined
                   readonly
                 />
+                <q-input
+                  v-model="profile.password"
+                  label="Mot de passe"
+                  type="password"
+                  outlined
+                  readonly
+                />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section actions -->
-      <section class="section-alt">
-        <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Actions</h2>
-          </div>
-          <div class="row q-col-gutter-md">
-            <div class="col-12 col-sm-4">
-              <q-btn
-                color="primary"
-                label="Modifier le profil"
-                icon="edit"
-                class="full-width"
-                size="lg"
-              />
-            </div>
-            <div class="col-12 col-sm-4">
-              <q-btn
-                color="secondary"
-                label="Changer le mot de passe"
-                icon="lock"
-                class="full-width"
-                size="lg"
-              />
-            </div>
-            <div class="col-12 col-sm-4">
-              <q-btn
-                color="negative"
-                label="Se déconnecter"
-                icon="logout"
-                class="full-width"
-                size="lg"
-                @click="handleLogout"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
     </PageLayout>
   </AppLayout>
 </template>
@@ -105,6 +77,7 @@ const profile = reactive({
     return getRoleLabel(role)
   }),
   avatar: computed(() => authStore.user?.avatar || ''),
+  password: computed(() => '••••••••'),
 })
 
 // Méthodes
@@ -130,7 +103,8 @@ const handleLogout = () => {
       message: 'Déconnexion réussie',
       position: 'top',
     })
-    router.push('/login')
+    router.push('/')
   })
 }
+
 </script>

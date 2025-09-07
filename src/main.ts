@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
-import { Quasar, Notify } from 'quasar'
+import { Quasar, Notify, Dialog } from 'quasar'
 import router from './router'
 import App from './App.vue'
 import { useAuthStore } from './stores/auth'
@@ -30,6 +30,7 @@ app.use(router)
 app.use(Quasar, {
   plugins: {
     Notify,
+    Dialog,
   },
   config: quasarConfig,
 })
