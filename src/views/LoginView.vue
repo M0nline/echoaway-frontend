@@ -1,9 +1,6 @@
 <template>
   <AppLayout>
-    <PageLayout
-      page-class="login-page"
-      page-content-class="flex flex-center bg-grey-1"
-    >
+    <PageLayout page-class="login-page" page-content-class="flex flex-center">
       <div class="row full-width justify-center">
         <div class="col-12 col-sm-8 col-md-6 col-lg-4">
           <q-card class="login-card q-pa-lg">

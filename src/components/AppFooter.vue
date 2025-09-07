@@ -2,7 +2,9 @@
   <footer class="echoaway-footer">
     <div class="echoaway-footer-content">
       <div class="echoaway-footer-section">
-        <h3>ECHOAWAY</h3>
+        <h3>
+          <router-link to="/" class="echoaway-footer-logo">ECHOAWAY</router-link>
+        </h3>
         <p>
           Votre plateforme de référence pour découvrir des hébergements adaptés
           aux personnes électrosensibles.
@@ -45,7 +47,7 @@
 
     <div class="echoaway-footer-bottom">
       <div class="echoaway-footer-bottom-content">
-        <p>&copy; 2024 EchoAway. Tous droits réservés.</p>
+        <p>&copy; 2025 EchoAway. Tous droits réservés.</p>
         <div class="echoaway-social-links">
           <a href="#" aria-label="Facebook">
             <q-icon name="facebook" size="sm" />
