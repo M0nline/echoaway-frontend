@@ -76,10 +76,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import AppLayout from '../components/AppLayout.vue'
-import PageLayout from '../components/PageLayout.vue'
-import FeatureCard from '../components/FeatureCard.vue'
-import AccommodationCard from '../components/AccommodationCard.vue'
+import AppLayout from '../components/layout/AppLayout.vue'
+import PageLayout from '../components/layout/PageLayout.vue'
+import FeatureCard from '../components/common/FeatureCard.vue'
+import AccommodationCard from '../components/accommodations/AccommodationCard.vue'
 import { useAuthStore } from '../stores/auth'
 
 const authStore = useAuthStore()

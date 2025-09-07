@@ -62,8 +62,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useAuthStore } from '../stores/auth'
-import { getRoleLabel } from '../utils/roleLabels'
+import { useAuthStore } from '../../stores/auth'
+import { getRoleLabel } from '../../utils/roleLabels'
 import { useQuasar } from 'quasar'
 import { useRouter, useRoute } from 'vue-router'
 

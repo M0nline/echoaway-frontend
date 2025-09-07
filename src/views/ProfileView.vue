@@ -8,77 +8,32 @@
       />
 
       <!-- Section informations personnelles -->
-      <section class="section">
-        <div class="container">
-          <div class="section-header">
-            <h2 class="section-title">Informations personnelles</h2>
-          </div>
-          <div class="row justify-center">
-            <div class="col-12 col-md-8 col-lg-6">
-              <div class="q-gutter-md">
-                <q-input
-                  v-model="profile.firstname"
-                  label="Prénom"
-                  outlined
-                  readonly
-                />
-                <q-input
-                  v-model="profile.name"
-                  label="Nom complet"
-                  outlined
-                  readonly
-                />
-                <q-input
-                  v-model="profile.email"
-                  label="Email"
-                  type="email"
-                  outlined
-                  readonly
-                />
-                <q-input
-                  v-model="profile.password"
-                  label="Mot de passe"
-                  type="password"
-                  outlined
-                  readonly
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ProfilePersonalInfo />
+
+      <!-- Section favoris -->
+      <ProfileFavorites 
+        @explore-accommodations="handleExploreAccommodations"
+        @view-accommodation="handleViewAccommodation"
+      />
 
     </PageLayout>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import AppLayout from '../components/AppLayout.vue'
-import PageLayout from '../components/PageLayout.vue'
-import ProfileHeader from '../components/ProfileHeader.vue'
+import AppLayout from '../components/layout/AppLayout.vue'
+import PageLayout from '../components/layout/PageLayout.vue'
+import ProfileHeader from '../components/profile/ProfileHeader.vue'
+import ProfilePersonalInfo from '../components/profile/ProfilePersonalInfo.vue'
+import ProfileFavorites from '../components/profile/ProfileFavorites.vue'
 import { useAuthStore } from '../stores/auth'
-import { getRoleLabel } from '../utils/roleLabels'
 
 // Composables
 const router = useRouter()
 const $q = useQuasar()
 const authStore = useAuthStore()
-
-// État réactif
-const profile = reactive({
-  firstname: computed(() => authStore.user?.firstname || ''),
-  name: computed(() => authStore.user?.name || ''),
-  email: computed(() => authStore.user?.email || ''),
-  role: computed(() => {
-    const role = authStore.user?.role || 'visitor'
-    return getRoleLabel(role)
-  }),
-  avatar: computed(() => authStore.user?.avatar || ''),
-  password: computed(() => '••••••••'),
-})
 
 // Méthodes
 const handleEditProfile = () => {
@@ -105,6 +60,15 @@ const handleLogout = () => {
     })
     router.push('/')
   })
+}
+
+const handleExploreAccommodations = () => {
+  router.push('/accommodations')
+}
+
+const handleViewAccommodation = (accommodationId: number) => {
+  // TODO: Implémenter la navigation vers les détails de l'hébergement
+  router.push(`/accommodations/${accommodationId}`)
 }
 
 </script>

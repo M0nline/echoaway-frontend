@@ -58,8 +58,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useAuthStore } from '../stores/auth'
-import { getRoleLabel } from '../utils/roleLabels'
+import { useAuthStore } from '../../stores/auth'
+import { getRoleLabel } from '../../utils/roleLabels'
 
 // Props et emits
 defineEmits<{
@@ -104,7 +104,7 @@ const memberSince = computed(() => {
 <style scoped>
 .profile-header {
   padding: 3rem 0;
-  background: var(--echoaway-light);
+  background: var(--echoaway-white);
   border-bottom: 1px solid rgba(226, 149, 120, 0.1);
 }
 

@@ -194,9 +194,9 @@ import { ref, reactive, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth'
 import { apiService } from '../services/api'
-import AppLayout from '../components/AppLayout.vue'
-import PageLayout from '../components/PageLayout.vue'
-import AccommodationDialog from '../components/AccommodationDialog.vue'
+import AppLayout from '../components/layout/AppLayout.vue'
+import PageLayout from '../components/layout/PageLayout.vue'
+import AccommodationDialog from '../components/accommodations/AccommodationDialog.vue'
 
 // Types
 interface Accommodation {

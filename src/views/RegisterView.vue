@@ -221,8 +221,8 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth'
-import AppLayout from '../components/AppLayout.vue'
-import PageLayout from '../components/PageLayout.vue'
+import AppLayout from '../components/layout/AppLayout.vue'
+import PageLayout from '../components/layout/PageLayout.vue'
 
 // Composables
 const router = useRouter()
