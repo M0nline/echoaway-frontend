@@ -52,31 +52,37 @@ const emit = defineEmits<{
 
 // Types
 interface Accommodation {
-  id: string
-  name: string
-  location: string
-  type: string
-  connectivity: 'None' | 'Low' | 'High'
-  pricePerNight?: number
-  numberOfRooms?: number
-  description?: string
-  createdAt: string
-  updatedAt: string
-}
-
-interface AccommodationFormData {
-  name: string
+  id: number
+  title: string
   address: string
   postalCode: string
   city: string
   type: string
   connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
-  priceMinPerNight?: number
-  priceMaxPerNight?: number
-  numberOfBeds?: number
+  priceMinPerNight: number
+  priceMaxPerNight: number
+  numberOfBeds: number
   description: string
-  bookingLink: string
-  phoneNumber: string
+  bookingLink?: string
+  phoneNumber?: string
+  hostId: number
+  createdAt: Date | string
+  updatedAt: Date | string
+}
+
+interface AccommodationFormData {
+  title: string
+  address: string
+  postalCode: string
+  city: string
+  type: string
+  connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
+  priceMinPerNight: number
+  priceMaxPerNight: number
+  numberOfBeds: number
+  description: string
+  bookingLink?: string
+  phoneNumber?: string
 }
 
 // État local
@@ -88,15 +94,15 @@ const show = computed({
 const isEditing = computed(() => !!props.accommodation)
 
 const formData = ref<AccommodationFormData>({
-  name: '',
+  title: '',
   address: '',
   postalCode: '',
   city: '',
   type: '',
   connectivity: 'Zone blanche',
-  priceMinPerNight: undefined,
-  priceMaxPerNight: undefined,
-  numberOfBeds: undefined,
+  priceMinPerNight: 0,
+  priceMaxPerNight: 0,
+  numberOfBeds: 1,
   description: '',
   bookingLink: '',
   phoneNumber: '',
@@ -105,34 +111,18 @@ const formData = ref<AccommodationFormData>({
 // Référence au formulaire pour déclencher la soumission
 const formRef = ref<InstanceType<typeof AccommodationForm> | null>(null)
 
-// Mapper la connectivité du backend vers le frontend
-const mapConnectivity = (
-  backendConnectivity: string
-): 'Zone blanche' | 'Zone grise' | 'Autre' => {
-  switch (backendConnectivity) {
-    case 'None':
-      return 'Zone blanche'
-    case 'Low':
-      return 'Zone grise'
-    case 'High':
-      return 'Autre'
-    default:
-      return 'Zone blanche'
-  }
-}
-
 // Réinitialiser le formulaire
 const resetForm = () => {
   formData.value = {
-    name: '',
+    title: '',
     address: '',
     postalCode: '',
     city: '',
     type: '',
     connectivity: 'Zone blanche',
-    priceMinPerNight: undefined,
-    priceMaxPerNight: undefined,
-    numberOfBeds: undefined,
+    priceMinPerNight: 0,
+    priceMaxPerNight: 0,
+    numberOfBeds: 1,
     description: '',
     bookingLink: '',
     phoneNumber: '',
@@ -146,18 +136,18 @@ watch(
     if (newAccommodation) {
       // Mode édition - remplir avec les données existantes
       formData.value = {
-        name: newAccommodation.name || '',
-        address: newAccommodation.location || '',
-        postalCode: '',
-        city: '',
+        title: newAccommodation.title || '',
+        address: newAccommodation.address || '',
+        postalCode: newAccommodation.postalCode || '',
+        city: newAccommodation.city || '',
         type: newAccommodation.type || '',
-        connectivity: mapConnectivity(newAccommodation.connectivity),
-        priceMinPerNight: newAccommodation.pricePerNight,
-        priceMaxPerNight: newAccommodation.pricePerNight,
-        numberOfBeds: newAccommodation.numberOfRooms,
+        connectivity: newAccommodation.connectivity || 'Zone blanche',
+        priceMinPerNight: newAccommodation.priceMinPerNight || 0,
+        priceMaxPerNight: newAccommodation.priceMaxPerNight || 0,
+        numberOfBeds: newAccommodation.numberOfBeds || 1,
         description: newAccommodation.description || '',
-        bookingLink: '',
-        phoneNumber: '',
+        bookingLink: newAccommodation.bookingLink || '',
+        phoneNumber: newAccommodation.phoneNumber || '',
       }
     } else {
       // Mode création - formulaire vide

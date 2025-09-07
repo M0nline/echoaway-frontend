@@ -1,44 +1,119 @@
 /* Design System EchoAway - Styles globaux */
 
+/* Import des composants de layout */
+@import './components/layout.css';
+
 :root {
-  /* Variables CSS personnalisées */
-  --echoaway-primary: #006d77;
-  --echoaway-secondary: #83c5be;
-  --echoaway-accent: #e29578;
-  --echoaway-dark: #006d77;
-  --echoaway-dark-page: #edf6f9;
-  --echoaway-positive: #21ba45;
-  --echoaway-negative: #c10015;
-  --echoaway-info: #31ccec;
-  --echoaway-warning: #f2c037;
+  /* Variables CSS personnalisées - Low Radiation Design */
+  --echoaway-primary: #e29578; /* Orange terreux - couleur principale */
+  --echoaway-secondary: #ffddd2; /* Rose très clair - couleur secondaire */
+  --echoaway-accent: #006d77; /* Bleu-vert foncé - accent */
+  --echoaway-light: #fef7f3; /* Rose très clair atténué - fond clair */
+  --echoaway-white: #ffffff; /* Blanc pur */
+  --echoaway-warm: #83c5be; /* Bleu-vert clair - tons chauds */
+  --echoaway-dark: #2c3e50; /* Bleu-gris foncé - texte */
+  --echoaway-dark-page: #fef7f3; /* Rose très clair atténué - fond page chaleureux */
+  --echoaway-positive: #27ae60; /* Vert naturel */
+  --echoaway-negative: #e74c3c; /* Rouge doux */
+  --echoaway-info: #3498db; /* Bleu doux */
+  --echoaway-warning: #f39c12; /* Orange doux */
+
+  /* Typography */
+  --font-heading: 'Merriweather', serif;
+  --font-body: 'Lato', sans-serif;
+
+  /* Organic Design Tokens */
+  --border-radius-organic: 12px;
+  --border-radius-soft: 8px;
+  --shadow-soft: 0 2px 8px rgba(226, 149, 120, 0.1);
+  --shadow-gentle: 0 4px 16px rgba(226, 149, 120, 0.15);
+  --transition-organic: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Styles globaux pour les cartes */
+/* Typography System - Organic & Natural */
+body {
+  font-family: var(--font-body);
+  line-height: 1.7;
+  color: var(--echoaway-dark);
+  background-color: var(--echoaway-dark-page);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--echoaway-accent);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.75rem;
+}
+h4 {
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 1.25rem;
+}
+h6 {
+  font-size: 1.125rem;
+}
+
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select {
+  font-family: var(--font-body);
+}
+
+/* Styles globaux pour les cartes - Organic Design */
 .design-system-card {
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-organic);
+  transition: var(--transition-organic);
+  box-shadow: var(--shadow-soft);
+  background-color: white;
+  border: 1px solid rgba(226, 149, 120, 0.1);
 }
 
 .design-system-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 109, 119, 0.15);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gentle);
+  border-color: rgba(226, 149, 120, 0.2);
 }
 
 .design-system-card--elevated {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Styles globaux pour les boutons */
+/* Styles globaux pour les boutons - Organic Design */
 .design-system-btn--primary {
-  border-radius: 8px;
+  border-radius: var(--border-radius-soft);
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: var(--transition-organic);
+  background-color: var(--echoaway-primary);
+  color: white;
+  border: none;
 }
 
 .design-system-btn--primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 109, 119, 0.3);
+  box-shadow: var(--shadow-gentle);
+  background-color: #d4856a;
 }
 
 .design-system-btn--secondary {

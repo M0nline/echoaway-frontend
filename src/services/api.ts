@@ -2,6 +2,7 @@
 // Utilise la configuration d'environnement
 
 import { config, getApiUrl, validateConfig } from '../config/environment'
+import type { AuthResponse, LoginRequest, RegisterRequest } from '../types/api'
 
 class ApiService {
   private baseUrl: string
@@ -49,29 +50,26 @@ class ApiService {
   }
 
   // Méthodes pour l'authentification
-  async login(email: string, password: string) {
-    return this.request('/auth/login', {
+  async login(email: string, password: string): Promise<AuthResponse> {
+    return this.request<AuthResponse>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
   }
 
-  async register(userData: {
-    email: string
-    password: string
-    login: string
-    name: string
-    role?: 'user' | 'admin' | 'host'
-    avatar?: string
-  }) {
-    return this.request('/auth/register', {
+  async register(userData: RegisterRequest): Promise<AuthResponse> {
+    return this.request<AuthResponse>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     })
   }
 
-  async getProfile(token: string) {
-    return this.request('/auth/profile', {
+  async getProfile(token: string): Promise<AuthResponse> {
+    console.log(
+      '🌐 API: Appel getProfile avec token:',
+      token?.substring(0, 20) + '...'
+    )
+    return this.request<AuthResponse>('/auth/profile', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -79,16 +77,17 @@ class ApiService {
   }
 
   // Méthodes pour les hébergements
-  async getAccommodations(token?: string) {
-    const headers: Record<string, string> = {}
-    if (token) {
-      headers.Authorization = `Bearer ${token}`
-    }
-
-    return this.request('/accommodations', { headers })
+  async getAccommodations() {
+    // Les hébergements sont accessibles à tous (pas besoin d'auth)
+    return this.request('/accommodations')
   }
 
-  async createAccommodation(data: any, token: string) {
+  async createAccommodation(data: any) {
+    const token = this.getAuthToken()
+    if (!token) {
+      throw new Error("Token d'authentification requis")
+    }
+
     return this.request('/accommodations', {
       method: 'POST',
       headers: {
@@ -98,7 +97,12 @@ class ApiService {
     })
   }
 
-  async updateAccommodation(id: string, data: any, token: string) {
+  async updateAccommodation(id: string, data: any) {
+    const token = this.getAuthToken()
+    if (!token) {
+      throw new Error("Token d'authentification requis")
+    }
+
     return this.request(`/accommodations/${id}`, {
       method: 'PUT',
       headers: {
@@ -108,13 +112,33 @@ class ApiService {
     })
   }
 
-  async deleteAccommodation(id: string, token: string) {
+  async deleteAccommodation(id: string) {
+    const token = this.getAuthToken()
+    if (!token) {
+      throw new Error("Token d'authentification requis")
+    }
+
     return this.request(`/accommodations/${id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
+  }
+
+  // Méthode utilitaire pour récupérer le token d'authentification
+  private getAuthToken(): string | null {
+    // Récupérer le token depuis le localStorage (clé Pinia)
+    const authData = localStorage.getItem('echoaway-auth')
+    if (authData) {
+      try {
+        const parsed = JSON.parse(authData)
+        return parsed.token || null
+      } catch {
+        return null
+      }
+    }
+    return null
   }
 
   // Méthode pour vérifier la connectivité

@@ -1,12 +1,14 @@
 <template>
-  <q-page class="q-pa-md">
-    <div class="row q-col-gutter-md">
-      <!-- En-tête -->
-      <div class="col-12">
-        <div class="row items-center justify-between q-mb-lg">
-          <div class="text-h3 text-lg-h4 text-md-h5 text-primary">
-            Gestion des Hébergements
-          </div>
+  <AppLayout>
+    <PageLayout>
+      <!-- Section en-tête -->
+      <section class="hero-section">
+        <div class="container">
+          <h1 class="hero-title">Gestion des Hébergements</h1>
+          <p class="hero-description">
+            Gérez vos hébergements et découvrez de nouveaux lieux pour vos
+            séjours
+          </p>
           <q-btn
             color="primary"
             icon="add"
@@ -15,155 +17,175 @@
             @click="showCreateDialog = true"
           />
         </div>
-      </div>
+      </section>
 
-      <!-- Filtres -->
-      <div class="col-12">
-        <q-card>
-          <q-card-section>
-            <div class="row q-col-gutter-lg">
-              <div class="col-12 col-lg-3 col-md-6">
-                <q-input
-                  v-model="filters.search"
-                  label="Rechercher un hébergement"
-                  outlined
-                  clearable
-                  @update:model-value="loadAccommodations"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="search" />
-                  </template>
-                </q-input>
-              </div>
-              <div class="col-12 col-lg-3 col-md-6">
-                <q-select
-                  v-model="filters.connectivity"
-                  :options="connectivityOptions"
-                  label="Zone de connectivité"
-                  outlined
-                  clearable
-                  @update:model-value="loadAccommodations"
-                />
-              </div>
-              <div class="col-12 col-lg-3 col-md-6">
-                <q-select
-                  v-model="filters.type"
-                  :options="typeOptions"
-                  label="Type d'hébergement"
-                  outlined
-                  clearable
-                  @update:model-value="loadAccommodations"
-                />
-              </div>
-              <div class="col-12 col-lg-3 col-md-6">
-                <q-btn
-                  color="primary"
-                  icon="refresh"
-                  label="Actualiser"
-                  @click="loadAccommodations"
-                  class="full-width"
-                />
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <!-- Liste des hébergements -->
-      <div class="col-12">
-        <q-card>
-          <q-card-section>
-            <div v-if="loading" class="text-center q-pa-md">
-              <q-spinner-dots size="50px" color="primary" />
-              <div class="q-mt-sm">Chargement...</div>
-            </div>
-
-            <div
-              v-else-if="accommodations.length === 0"
-              class="text-center q-pa-md"
-            >
-              <q-icon name="hotel" size="100px" color="grey-4" />
-              <div class="text-h6 text-grey-6 q-mt-md">
-                Aucun hébergement trouvé
-              </div>
-            </div>
-
-            <div v-else class="row q-col-gutter-lg">
-              <div
-                v-for="accommodation in accommodations"
-                :key="accommodation.id"
-                class="col-12 col-xl-3 col-lg-4 col-md-6"
+      <!-- Section filtres -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Filtres</h2>
+          </div>
+          <div class="row q-col-gutter-lg">
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-input
+                v-model="filters.search"
+                label="Rechercher un hébergement"
+                outlined
+                clearable
+                @update:model-value="loadAccommodations"
               >
-                <q-card class="accommodation-card design-system-card">
-                  <q-card-section>
-                    <div class="text-h6 text-weight-medium">
-                      {{ accommodation.name }}
-                    </div>
-                    <div class="text-subtitle2 text-grey-6 q-mt-xs">
-                      {{ accommodation.location }}
-                    </div>
-                    <div class="q-mt-md">
-                      <q-chip
-                        :color="
-                          getConnectivityColor(accommodation.connectivity)
-                        "
-                        text-color="white"
-                        size="sm"
-                        class="q-mr-xs"
-                      >
-                        {{ accommodation.connectivity }}
-                      </q-chip>
-                      <q-chip color="secondary" text-color="white" size="sm">
-                        {{ accommodation.type }}
-                      </q-chip>
-                    </div>
-                    <div
-                      v-if="accommodation.pricePerNight"
-                      class="text-h6 text-primary q-mt-md"
-                    >
-                      {{ accommodation.pricePerNight }}€ / nuit
-                    </div>
-                    <div
-                      v-if="accommodation.description"
-                      class="text-body2 q-mt-sm text-grey-7"
-                    >
-                      {{ accommodation.description }}
-                    </div>
-                  </q-card-section>
-
-                  <q-card-actions align="right">
-                    <q-btn
-                      flat
-                      color="primary"
-                      icon="edit"
-                      size="sm"
-                      @click="editAccommodation(accommodation)"
-                    />
-                    <q-btn
-                      flat
-                      color="negative"
-                      icon="delete"
-                      size="sm"
-                      @click="deleteAccommodation(accommodation.id)"
-                    />
-                  </q-card-actions>
-                </q-card>
-              </div>
+                <template v-slot:prepend>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
             </div>
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-select
+                v-model="filters.connectivity"
+                :options="connectivityOptions"
+                label="Zone de connectivité"
+                outlined
+                clearable
+                @update:model-value="loadAccommodations"
+              />
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-select
+                v-model="filters.type"
+                :options="typeOptions"
+                label="Type d'hébergement"
+                outlined
+                clearable
+                @update:model-value="loadAccommodations"
+              />
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-btn
+                color="primary"
+                icon="refresh"
+                label="Actualiser"
+                @click="loadAccommodations"
+                class="full-width"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <!-- Dialog de création/édition -->
-    <AccommodationDialog
-      v-model="showCreateDialog"
-      :accommodation="editingAccommodation"
-      :loading="loading"
-      @submit="saveAccommodation"
-      @cancel="closeDialog"
-    />
-  </q-page>
+      <!-- Section liste des hébergements -->
+      <section class="section-alt">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Hébergements</h2>
+          </div>
+
+          <div v-if="loading" class="text-center q-pa-md">
+            <q-spinner-dots size="50px" color="primary" />
+            <div class="q-mt-sm">Chargement...</div>
+          </div>
+
+          <div
+            v-else-if="accommodations.length === 0"
+            class="text-center q-pa-md"
+          >
+            <q-icon name="hotel" size="100px" color="grey-4" />
+            <div class="text-h6 text-grey-6 q-mt-md">
+              Aucun hébergement trouvé
+            </div>
+          </div>
+
+          <div v-else class="accommodations-grid">
+            <div
+              v-for="accommodation in accommodations"
+              :key="accommodation.id"
+              class="accommodation-item"
+            >
+              <q-card class="accommodation-card design-system-card">
+                <q-card-section>
+                  <div class="text-h6 text-weight-medium">
+                    {{ accommodation.title }}
+                  </div>
+                  <div class="text-subtitle2 text-grey-6 q-mt-xs">
+                    {{ accommodation.address }}, {{ accommodation.postalCode }}
+                    {{ accommodation.city }}
+                  </div>
+                  <div class="q-mt-md">
+                    <q-chip
+                      :color="getConnectivityColor(accommodation.connectivity)"
+                      text-color="white"
+                      size="sm"
+                      class="q-mr-xs"
+                    >
+                      {{ accommodation.connectivity }}
+                    </q-chip>
+                    <q-chip color="secondary" text-color="white" size="sm">
+                      {{ accommodation.type }}
+                    </q-chip>
+                    <q-chip
+                      color="info"
+                      text-color="white"
+                      size="sm"
+                      class="q-ml-xs"
+                    >
+                      {{ accommodation.numberOfBeds }} couchages
+                    </q-chip>
+                  </div>
+                  <div
+                    v-if="
+                      accommodation.priceMinPerNight &&
+                      accommodation.priceMaxPerNight
+                    "
+                    class="text-h6 text-primary q-mt-md"
+                  >
+                    {{ accommodation.priceMinPerNight }}€ -
+                    {{ accommodation.priceMaxPerNight }}€ / nuit
+                  </div>
+                  <div
+                    v-else-if="accommodation.priceMinPerNight"
+                    class="text-h6 text-primary q-mt-md"
+                  >
+                    À partir de {{ accommodation.priceMinPerNight }}€ / nuit
+                  </div>
+                  <div
+                    v-if="accommodation.description"
+                    class="text-body2 q-mt-sm text-grey-7"
+                  >
+                    {{ accommodation.description }}
+                  </div>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                  <q-btn
+                    flat
+                    color="primary"
+                    icon="edit"
+                    size="sm"
+                    @click="editAccommodation(accommodation)"
+                  />
+                  <q-btn
+                    flat
+                    color="negative"
+                    icon="delete"
+                    size="sm"
+                    @click="deleteAccommodation(accommodation.id)"
+                  />
+                </q-card-actions>
+              </q-card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dialog de création/édition -->
+      <AccommodationDialog
+        v-model="showCreateDialog"
+        :accommodation="editingAccommodation"
+        :loading="loading"
+        @submit="saveAccommodation"
+        @cancel="closeDialog"
+      />
+    </PageLayout>
+  </AppLayout>
 </template>
 
 <script setup lang="ts">
@@ -171,20 +193,28 @@ import { ref, reactive, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth'
 import { apiService } from '../services/api'
-import AccommodationDialog from '../components/AccommodationDialog.vue'
+import AppLayout from '../components/layout/AppLayout.vue'
+import PageLayout from '../components/layout/PageLayout.vue'
+import AccommodationDialog from '../components/accommodations/AccommodationDialog.vue'
 
 // Types
 interface Accommodation {
-  id: string // Changé de number à string pour correspondre au backend
-  name: string
-  location: string
+  id: number
+  title: string
+  address: string
+  postalCode: string
+  city: string
   type: string
-  connectivity: 'None' | 'Low' | 'High'
-  pricePerNight?: number
-  numberOfRooms?: number
-  description?: string
-  createdAt: string
-  updatedAt: string
+  connectivity: 'Zone blanche' | 'Zone grise' | 'Autre'
+  priceMinPerNight: number
+  priceMaxPerNight: number
+  numberOfBeds: number
+  description: string
+  bookingLink?: string
+  phoneNumber?: string
+  hostId: number
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 // Composables
@@ -204,11 +234,7 @@ const filters = reactive({
 })
 
 // Options pour les selects (utilisées par le composant AccommodationForm)
-const connectivityOptions = [
-  { label: 'Zone blanche', value: 'Zone blanche' },
-  { label: 'Zone grise', value: 'Zone grise' },
-  { label: 'Autre', value: 'Autre' },
-]
+const connectivityOptions = ['Zone blanche', 'Zone grise', 'Autre']
 
 const typeOptions = [
   'Appartement',
@@ -227,7 +253,8 @@ const loadAccommodations = async () => {
   loading.value = true
   try {
     // Charger les hébergements (accessible à tous)
-    accommodations.value = await apiService.getAccommodations()
+    const data = await apiService.getAccommodations()
+    accommodations.value = data as Accommodation[]
   } catch (error) {
     console.error('Erreur lors du chargement:', error)
     $q.notify({
@@ -244,7 +271,7 @@ const saveAccommodation = async (formData: any) => {
     if (editingAccommodation.value) {
       // Mise à jour
       await apiService.updateAccommodation(
-        editingAccommodation.value.id,
+        editingAccommodation.value.id.toString(),
         formData
       )
       $q.notify({
@@ -252,8 +279,19 @@ const saveAccommodation = async (formData: any) => {
         message: 'Hébergement modifié avec succès',
       })
     } else {
-      // Création
-      await apiService.createAccommodation(formData)
+      // Création - ajouter l'hostId depuis le store d'auth
+      const authStore = useAuthStore()
+      const userData = authStore.user
+      if (!userData) {
+        throw new Error('Utilisateur non connecté')
+      }
+
+      const accommodationData = {
+        ...formData,
+        hostId: userData.id,
+      }
+
+      await apiService.createAccommodation(accommodationData)
       $q.notify({
         type: 'positive',
         message: 'Hébergement créé avec succès',
@@ -262,11 +300,12 @@ const saveAccommodation = async (formData: any) => {
 
     closeDialog()
     loadAccommodations()
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erreur lors de la sauvegarde:', error)
+    const errorMessage = error.message || 'Erreur lors de la sauvegarde'
     $q.notify({
       type: 'negative',
-      message: 'Erreur lors de la sauvegarde',
+      message: errorMessage,
     })
   }
 }
@@ -276,7 +315,7 @@ const editAccommodation = (accommodation: Accommodation) => {
   showCreateDialog.value = true
 }
 
-const deleteAccommodation = async (id: string) => {
+const deleteAccommodation = async (id: number) => {
   $q.dialog({
     title: 'Confirmation',
     message: 'Êtes-vous sûr de vouloir supprimer cet hébergement ?',
@@ -284,18 +323,19 @@ const deleteAccommodation = async (id: string) => {
     persistent: true,
   }).onOk(async () => {
     try {
-      await apiService.deleteAccommodation(id)
+      await apiService.deleteAccommodation(id.toString())
 
       $q.notify({
         type: 'positive',
         message: 'Hébergement supprimé avec succès',
       })
       loadAccommodations()
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur lors de la suppression:', error)
+      const errorMessage = error.message || 'Erreur lors de la suppression'
       $q.notify({
         type: 'negative',
-        message: 'Erreur lors de la suppression',
+        message: errorMessage,
       })
     }
   })
@@ -308,10 +348,12 @@ const closeDialog = () => {
 
 const getConnectivityColor = (connectivity: string) => {
   switch (connectivity) {
-    case 'High':
+    case 'Autre':
       return 'positive'
-    case 'Low':
+    case 'Zone grise':
       return 'warning'
+    case 'Zone blanche':
+      return 'grey'
     default:
       return 'grey'
   }
