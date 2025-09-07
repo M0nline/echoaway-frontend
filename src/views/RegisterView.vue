@@ -312,7 +312,8 @@ const convertFileToBase64 = (file: File): Promise<string> => {
         reject(new Error('Erreur lors de la conversion du fichier'))
       }
     }
-    reader.onerror = () => reject(new Error('Erreur lors de la lecture du fichier'))
+    reader.onerror = () =>
+      reject(new Error('Erreur lors de la lecture du fichier'))
     reader.readAsDataURL(file)
   })
 }

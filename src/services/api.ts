@@ -65,7 +65,10 @@ class ApiService {
   }
 
   async getProfile(token: string): Promise<AuthResponse> {
-    console.log('🌐 API: Appel getProfile avec token:', token?.substring(0, 20) + '...')
+    console.log(
+      '🌐 API: Appel getProfile avec token:',
+      token?.substring(0, 20) + '...'
+    )
     return this.request<AuthResponse>('/auth/profile', {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -82,9 +85,9 @@ class ApiService {
   async createAccommodation(data: any) {
     const token = this.getAuthToken()
     if (!token) {
-      throw new Error('Token d\'authentification requis')
+      throw new Error("Token d'authentification requis")
     }
-    
+
     return this.request('/accommodations', {
       method: 'POST',
       headers: {
@@ -97,9 +100,9 @@ class ApiService {
   async updateAccommodation(id: string, data: any) {
     const token = this.getAuthToken()
     if (!token) {
-      throw new Error('Token d\'authentification requis')
+      throw new Error("Token d'authentification requis")
     }
-    
+
     return this.request(`/accommodations/${id}`, {
       method: 'PUT',
       headers: {
@@ -112,9 +115,9 @@ class ApiService {
   async deleteAccommodation(id: string) {
     const token = this.getAuthToken()
     if (!token) {
-      throw new Error('Token d\'authentification requis')
+      throw new Error("Token d'authentification requis")
     }
-    
+
     return this.request(`/accommodations/${id}`, {
       method: 'DELETE',
       headers: {

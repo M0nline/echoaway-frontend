@@ -35,12 +35,14 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>Mon profil</q-item-label>
-                  <q-item-label caption>{{ authStatus.roleLabel }}</q-item-label>
+                  <q-item-label caption>{{
+                    authStatus.roleLabel
+                  }}</q-item-label>
                 </q-item-section>
               </q-item>
-              
+
               <q-separator />
-              
+
               <q-item clickable v-close-popup @click="handleLogout">
                 <q-item-section avatar>
                   <q-icon name="logout" />
@@ -193,13 +195,13 @@ const handleLogout = () => {
 
 onMounted(() => {
   console.log('🏠 HomeView mounted')
-  console.log('🔐 État d\'authentification:', {
+  console.log("🔐 État d'authentification:", {
     connecté: authStatus.value.isAuthenticated,
     utilisateur: authStatus.value.user?.email || 'Aucun',
     rôle: authStatus.value.role,
     'libellé du rôle': authStatus.value.roleLabel,
   })
-  
+
   // Log détaillé de l'utilisateur si connecté
   if (authStatus.value.isAuthenticated && authStatus.value.user) {
     console.log('👤 Détails utilisateur:', {

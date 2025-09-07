@@ -32,11 +32,14 @@ export const useAuthStore = defineStore(
     })
 
     // Actions
-    const login = async (email: string, password: string): Promise<AuthResponse> => {
+    const login = async (
+      email: string,
+      password: string
+    ): Promise<AuthResponse> => {
       loading.value = true
       try {
         console.log('🔐 Tentative de connexion pour:', email)
-        const data = await apiService.login(email, password) as AuthResponse
+        const data = (await apiService.login(email, password)) as AuthResponse
         user.value = data.user
         token.value = data.token
 
@@ -57,11 +60,18 @@ export const useAuthStore = defineStore(
       }
     }
 
-    const register = async (userData: RegisterRequest): Promise<AuthResponse> => {
+    const register = async (
+      userData: RegisterRequest
+    ): Promise<AuthResponse> => {
       loading.value = true
       try {
-        console.log('📝 Tentative d\'inscription pour:', userData.email, 'avec le rôle:', userData.role)
-        const data = await apiService.register(userData) as AuthResponse
+        console.log(
+          "📝 Tentative d'inscription pour:",
+          userData.email,
+          'avec le rôle:',
+          userData.role
+        )
+        const data = (await apiService.register(userData)) as AuthResponse
         user.value = data.user
         token.value = data.token
 
@@ -77,7 +87,7 @@ export const useAuthStore = defineStore(
 
         return data
       } catch (error) {
-        console.log('❌ Erreur lors de l\'inscription:', error)
+        console.log("❌ Erreur lors de l'inscription:", error)
         throw error // Relancer l'erreur pour qu'elle soit gérée par le composant
       } finally {
         loading.value = false
@@ -85,7 +95,10 @@ export const useAuthStore = defineStore(
     }
 
     const logout = () => {
-      console.log('🚪 Déconnexion de l\'utilisateur:', user.value?.email || 'Inconnu')
+      console.log(
+        "🚪 Déconnexion de l'utilisateur:",
+        user.value?.email || 'Inconnu'
+      )
       user.value = null
       token.value = null
       // Le token sera automatiquement supprimé par Pinia
@@ -94,18 +107,26 @@ export const useAuthStore = defineStore(
 
     const checkAuth = async () => {
       // Utiliser le token du store Pinia (qui est persisté automatiquement)
-      console.log('🔍 Vérification du token dans le store:', token.value ? 'Présent' : 'Absent')
-      console.log('🔍 Contenu localStorage echoaway-auth:', localStorage.getItem('echoaway-auth'))
-      
+      console.log(
+        '🔍 Vérification du token dans le store:',
+        token.value ? 'Présent' : 'Absent'
+      )
+      console.log(
+        '🔍 Contenu localStorage echoaway-auth:',
+        localStorage.getItem('echoaway-auth')
+      )
+
       if (!token.value) {
         console.log('🔍 Aucun token trouvé dans le store')
         return false
       }
 
       try {
-        console.log('🔍 Vérification de l\'authentification avec le token existant')
+        console.log(
+          "🔍 Vérification de l'authentification avec le token existant"
+        )
         console.log('🔑 Token utilisé:', token.value?.substring(0, 20) + '...')
-        const data = await apiService.getProfile(token.value) as AuthResponse
+        const data = (await apiService.getProfile(token.value)) as AuthResponse
         user.value = data.user
         console.log('✅ Authentification vérifiée:', {
           utilisateur: data.user.email,
@@ -123,7 +144,7 @@ export const useAuthStore = defineStore(
       if (!token.value) return false
 
       try {
-        const data = await apiService.getProfile(token.value) as AuthResponse
+        const data = (await apiService.getProfile(token.value)) as AuthResponse
         user.value = data.user
         return true
       } catch (error) {
@@ -134,9 +155,12 @@ export const useAuthStore = defineStore(
 
     // Initialiser l'authentification au démarrage
     const initAuth = async () => {
-      console.log('🚀 Initialisation de l\'authentification...')
+      console.log("🚀 Initialisation de l'authentification...")
       const isAuthenticated = await checkAuth()
-      console.log('🚀 Initialisation terminée. État:', isAuthenticated ? 'Connecté' : 'Non connecté')
+      console.log(
+        '🚀 Initialisation terminée. État:',
+        isAuthenticated ? 'Connecté' : 'Non connecté'
+      )
     }
 
     return {

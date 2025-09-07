@@ -8,7 +8,9 @@ export async function requireAuth(to: any, _from: any) {
 
   // Vérifier si l'utilisateur est authentifié
   if (!authStore.isAuthenticated) {
-    console.log('🔒 Accès refusé - utilisateur non authentifié, redirection vers login')
+    console.log(
+      '🔒 Accès refusé - utilisateur non authentifié, redirection vers login'
+    )
     return {
       path: '/login',
       query: { redirect: to.fullPath },
@@ -39,7 +41,9 @@ export async function requireGuest(_to: any, _from: any) {
 
   // Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil
   if (authStore.isAuthenticated) {
-    console.log('🔒 Accès refusé - utilisateur déjà connecté, redirection vers accueil')
+    console.log(
+      '🔒 Accès refusé - utilisateur déjà connecté, redirection vers accueil'
+    )
     return '/'
   }
 
@@ -55,7 +59,9 @@ export async function requireRole(roles: string[], to: any, _from: any) {
 
   // Vérifier l'authentification d'abord
   if (!authStore.isAuthenticated) {
-    console.log('🔒 Accès refusé - utilisateur non authentifié pour rôle requis')
+    console.log(
+      '🔒 Accès refusé - utilisateur non authentifié pour rôle requis'
+    )
     return {
       path: '/login',
       query: { redirect: to.fullPath },
@@ -64,7 +70,12 @@ export async function requireRole(roles: string[], to: any, _from: any) {
 
   // Vérifier le rôle
   if (!roles.includes(authStore.userRole)) {
-    console.log('🔒 Accès refusé - rôle insuffisant:', authStore.userRole, 'requis:', roles)
+    console.log(
+      '🔒 Accès refusé - rôle insuffisant:',
+      authStore.userRole,
+      'requis:',
+      roles
+    )
     return '/'
   }
 
