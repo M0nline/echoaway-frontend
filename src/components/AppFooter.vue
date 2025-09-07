@@ -3,7 +3,9 @@
     <div class="echoaway-footer-content">
       <div class="echoaway-footer-section">
         <h3>
-          <router-link to="/" class="echoaway-footer-logo">ECHOAWAY</router-link>
+          <router-link to="/" class="echoaway-footer-logo"
+            >ECHOAWAY</router-link
+          >
         </h3>
         <p>
           Votre plateforme de référence pour découvrir des hébergements adaptés

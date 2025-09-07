@@ -14,7 +14,11 @@
         <router-link to="/register" class="echoaway-login-btn">
           S'inscrire
         </router-link>
-        <router-link to="/login" class="echoaway-login-btn">
+        <router-link 
+          v-if="!isLoginPage" 
+          to="/login" 
+          class="echoaway-login-btn"
+        >
           Connexion
         </router-link>
       </div>
@@ -34,7 +38,7 @@
               <q-item-section>
                 <q-item-label>Mon profil</q-item-label>
                 <q-item-label caption>{{
-                  getRoleLabel(authStore.user?.role)
+                  getRoleLabel(authStore.user?.role || 'visitor')
                 }}</q-item-label>
               </q-item-section>
             </q-item>
@@ -57,14 +61,19 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import { getRoleLabel } from '../utils/roleLabels'
 import { useQuasar } from 'quasar'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const authStore = useAuthStore()
 const $q = useQuasar()
 const router = useRouter()
+const route = useRoute()
+
+// Détecter si on est sur la page de login
+const isLoginPage = computed(() => route.path === '/login')
 
 const handleLogout = async () => {
   try {
