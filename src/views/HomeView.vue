@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <PageLayout page-class="home-page">
+    <PageLayout>
       <!-- Section principale - Besoin de déconnecter -->
       <section class="hero-section">
         <div class="container">
@@ -13,21 +13,12 @@
           </p>
 
           <div class="features-grid">
-            <div class="feature-card">
-              <div class="feature-image"></div>
-              <h3>No Wi-Fi</h3>
-              <q-btn color="primary" label="Découvrir" flat />
-            </div>
-            <div class="feature-card">
-              <div class="feature-image"></div>
-              <h3>Zones blanches et grises</h3>
-              <q-btn color="primary" label="Découvrir" flat />
-            </div>
-            <div class="feature-card">
-              <div class="feature-image"></div>
-              <h3>Zones blanches sans Wi-Fi</h3>
-              <q-btn color="primary" label="Découvrir" flat />
-            </div>
+            <FeatureCard
+              v-for="feature in features"
+              :key="feature.id"
+              :feature="feature"
+              @click="handleFeatureClick"
+            />
           </div>
         </div>
       </section>
@@ -65,28 +56,17 @@
           <div class="section-header">
             <h2 class="section-title">Mieux notés x Sponsorisés</h2>
             <p class="section-subtitle">
-              If you don't try this app, you won't become the superhero you were
-              meant to be
+              Découvrez nos hébergements les mieux notés par la communauté
+              électrosensible
             </p>
           </div>
 
           <div class="accommodations-grid">
-            <div class="accommodation-card" v-for="i in 4" :key="i">
-              <div class="accommodation-image"></div>
-              <div class="accommodation-content">
-                <div class="accommodation-location">Ville</div>
-                <div class="accommodation-host">
-                  Hôte
-                  <q-icon name="star" size="sm" class="star-icon" />
-                </div>
-                <div class="rating">
-                  <div class="rating-dots">
-                    <div class="dot" v-for="j in 4" :key="j"></div>
-                  </div>
-                </div>
-                <div class="price">Prix €€</div>
-              </div>
-            </div>
+            <AccommodationCard
+              v-for="accommodation in accommodations"
+              :key="accommodation.id"
+              :accommodation="accommodation"
+            />
           </div>
         </div>
       </section>
@@ -98,12 +78,82 @@
 import { ref, onMounted } from 'vue'
 import AppLayout from '../components/AppLayout.vue'
 import PageLayout from '../components/PageLayout.vue'
+import FeatureCard from '../components/FeatureCard.vue'
+import AccommodationCard from '../components/AccommodationCard.vue'
 import { useAuthStore } from '../stores/auth'
 
 const authStore = useAuthStore()
 
 const searchLocation = ref('')
 const searchType = ref('')
+
+// Données pour les features
+const features = ref([
+  {
+    id: 'no-wifi',
+    title: 'No Wi-Fi',
+    description:
+      'Découvrez des lieux sans connexion internet pour une déconnexion totale',
+    buttonText: 'Découvrir',
+    buttonColor: 'primary',
+  },
+  {
+    id: 'zones-blanches',
+    title: 'Zones blanches et grises',
+    description:
+      'Explorez les zones avec signal limité pour une expérience apaisante',
+    buttonText: 'Explorer',
+    buttonColor: 'primary',
+  },
+  {
+    id: 'zones-sans-wifi',
+    title: 'Zones blanches sans Wi-Fi',
+    description:
+      'Vivez une expérience authentique dans des lieux totalement déconnectés',
+    buttonText: 'Vivre',
+    buttonColor: 'primary',
+  },
+])
+
+// Données pour les accommodations (exemple)
+const accommodations = ref([
+  {
+    id: '1',
+    location: 'Montagne des Vosges',
+    host: 'Marie & Pierre',
+    rating: 4,
+    minPrice: 75,
+    maxPrice: 95,
+    isFavorite: true,
+  },
+  {
+    id: '2',
+    location: 'Côte Atlantique',
+    host: 'Jean-Luc',
+    rating: 5,
+    minPrice: 110,
+    maxPrice: 130,
+    isFavorite: false,
+  },
+  {
+    id: '3',
+    location: 'Provence',
+    host: 'Sophie',
+    rating: 3,
+    minPrice: 85,
+    maxPrice: 105,
+    isFavorite: true,
+  },
+  {
+    id: '4',
+    location: 'Bretagne',
+    host: 'Yann & Claire',
+    rating: 4,
+    minPrice: 100,
+    maxPrice: 120,
+    isFavorite: false,
+  },
+])
 
 onMounted(() => {
   console.log('🏠 HomeView mounted')
@@ -126,21 +176,22 @@ onMounted(() => {
     })
   }
 })
+
+// Fonction pour gérer les clics sur les features
+const handleFeatureClick = (feature: any) => {
+  console.log('🎯 Feature cliquée:', feature)
+  // Ici on pourrait naviguer vers une page spécifique ou ouvrir un dialog
+  // Par exemple: router.push(`/features/${feature.id}`)
+}
 </script>
 
 <style scoped>
-.home-page {
-  min-height: 100vh;
-  background-color: #edf6f9;
-}
-
+/* Styles spécifiques à la page d'accueil */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
-
-/* Styles spécifiques à la page d'accueil */
 
 /* Hero Section */
 .hero-section {
@@ -149,47 +200,46 @@ onMounted(() => {
 }
 
 .hero-title {
-  font-size: 3rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #006d77;
+  font-family: var(--font-heading);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--echoaway-accent);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
 }
 
 .hero-description {
-  font-size: 1.2rem;
-  color: #e29578;
-  max-width: 800px;
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  color: var(--echoaway-primary);
+  max-width: 600px;
   margin: 0 auto 3rem;
   line-height: 1.6;
+}
+
+/* Features Section */
+.features-section {
+  padding: 4rem 0;
+  background-color: white;
+}
+
+.features-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--echoaway-accent);
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 
-.feature-card {
-  text-align: center;
-  padding: 2rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.feature-image {
-  width: 100%;
-  height: 200px;
-  background-color: #83c5be;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.feature-card h3 {
-  margin-bottom: 1rem;
-  color: #006d77;
-}
+/* Styles des feature cards maintenant dans FeatureCard.vue */
 
 /* Search Section */
 .search-section {
@@ -198,10 +248,12 @@ onMounted(() => {
 }
 
 .section-title {
+  font-family: var(--font-heading);
   font-size: 2rem;
+  font-weight: 600;
+  color: var(--echoaway-accent);
   text-align: center;
   margin-bottom: 2rem;
-  color: #006d77;
 }
 
 .search-form {
@@ -212,13 +264,22 @@ onMounted(() => {
   margin: 0 auto;
 }
 
-.search-input {
-  margin-bottom: 1rem;
+.search-btn {
+  background-color: var(--echoaway-accent) !important;
+  color: white !important;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: var(--border-radius-soft);
+  text-transform: none;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-organic);
 }
 
-.search-btn {
-  background-color: #006d77 !important;
-  color: white !important;
+.search-btn:hover {
+  background-color: #005a61 !important;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-gentle);
 }
 
 /* Accommodations Section */
@@ -232,7 +293,8 @@ onMounted(() => {
 }
 
 .section-subtitle {
-  color: #e29578;
+  font-family: var(--font-body);
+  color: var(--echoaway-primary);
   font-style: italic;
   margin-top: 0.5rem;
 }
@@ -243,78 +305,21 @@ onMounted(() => {
   gap: 2rem;
 }
 
-.accommodation-card {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.accommodation-image {
-  width: 100%;
-  height: 150px;
-  background-color: #83c5be;
-}
-
-.accommodation-content {
-  padding: 1rem;
-}
-
-.accommodation-location {
-  font-weight: bold;
-  color: #006d77;
-  margin-bottom: 0.5rem;
-}
-
-.accommodation-host {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #e29578;
-  margin-bottom: 0.5rem;
-}
-
-.star-icon {
-  color: #ffd700;
-}
-
-.rating-dots {
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #ccc;
-}
-
-.price {
-  font-weight: bold;
-  color: #006d77;
-}
-
-/* Styles du footer supprimés - maintenant dans AppFooter.vue */
+/* Styles des accommodation cards maintenant dans AccommodationCard.vue */
 
 /* Responsive */
 @media (max-width: 768px) {
   .hero-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
-  .features-grid {
-    grid-template-columns: 1fr;
+  .hero-description {
+    font-size: 1.1rem;
   }
 
+  .features-grid,
   .accommodations-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .footer-links {
-    flex-direction: column;
-    gap: 0.5rem;
+    grid-template-columns: 1fr;
   }
 }
 </style>
