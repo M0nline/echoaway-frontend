@@ -1,212 +1,219 @@
 <template>
-  <q-page class="flex flex-center bg-grey-1">
-    <div class="row full-width justify-center">
-      <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-        <q-card class="register-card q-pa-lg">
-          <q-card-section class="text-center">
-            <div class="text-h4 text-primary q-mb-md">Inscription</div>
-            <div class="text-body2 text-grey-6">
-              Créez votre compte EchoAway
-            </div>
-          </q-card-section>
-
-          <q-card-section>
-            <q-form @submit="handleRegister" class="q-gutter-md">
-              <div class="row q-col-gutter-md">
-                <div class="col-12 col-sm-6">
-                  <q-input
-                    v-model="form.firstname"
-                    label="Prénom"
-                    outlined
-                    :rules="[
-                      (val) => !!val || 'Le prénom est requis',
-                      (val) =>
-                        val.length >= 2 ||
-                        'Le prénom doit contenir au moins 2 caractères',
-                    ]"
-                    :disable="authStore.loading"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="person" />
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col-12 col-sm-6">
-                  <q-input
-                    v-model="form.name"
-                    label="Nom de famille"
-                    outlined
-                    :rules="[
-                      (val) => !!val || 'Le nom de famille est requis',
-                      (val) =>
-                        val.length >= 2 ||
-                        'Le nom de famille doit contenir au moins 2 caractères',
-                    ]"
-                    :disable="authStore.loading"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="person" />
-                    </template>
-                  </q-input>
-                </div>
+  <AppLayout>
+    <PageLayout
+      page-class="register-page"
+      page-content-class="flex flex-center bg-grey-1"
+    >
+      <div class="row full-width justify-center">
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+          <q-card class="register-card q-pa-lg">
+            <q-card-section class="text-center">
+              <div class="text-h4 text-primary q-mb-md">Inscription</div>
+              <div class="text-body2 text-grey-6">
+                Créez votre compte EchoAway
               </div>
+            </q-card-section>
 
-              <q-input
-                v-model="form.email"
-                label="Email"
-                type="email"
-                outlined
-                :rules="[
-                  (val) => !!val || 'L\'email est requis',
-                  (val) =>
-                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Email invalide',
-                ]"
-                :disable="authStore.loading"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="email" />
-                </template>
-              </q-input>
+            <q-card-section>
+              <q-form @submit="handleRegister" class="q-gutter-md">
+                <div class="row q-col-gutter-md">
+                  <div class="col-12 col-sm-6">
+                    <q-input
+                      v-model="form.firstname"
+                      label="Prénom"
+                      outlined
+                      :rules="[
+                        (val) => !!val || 'Le prénom est requis',
+                        (val) =>
+                          val.length >= 2 ||
+                          'Le prénom doit contenir au moins 2 caractères',
+                      ]"
+                      :disable="authStore.loading"
+                    >
+                      <template v-slot:prepend>
+                        <q-icon name="person" />
+                      </template>
+                    </q-input>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <q-input
+                      v-model="form.name"
+                      label="Nom de famille"
+                      outlined
+                      :rules="[
+                        (val) => !!val || 'Le nom de famille est requis',
+                        (val) =>
+                          val.length >= 2 ||
+                          'Le nom de famille doit contenir au moins 2 caractères',
+                      ]"
+                      :disable="authStore.loading"
+                    >
+                      <template v-slot:prepend>
+                        <q-icon name="person" />
+                      </template>
+                    </q-input>
+                  </div>
+                </div>
 
-              <q-input
-                v-model="form.password"
-                label="Mot de passe"
-                :type="showPassword ? 'text' : 'password'"
-                outlined
-                :rules="[
-                  (val) => !!val || 'Le mot de passe est requis',
-                  (val) =>
-                    val.length >= 8 ||
-                    'Le mot de passe doit contenir au moins 8 caractères',
-                  (val) =>
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(val) ||
-                    'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre',
-                ]"
-                :disable="authStore.loading"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="lock" />
-                </template>
-                <template v-slot:append>
-                  <q-icon
-                    :name="showPassword ? 'visibility' : 'visibility_off'"
-                    class="cursor-pointer"
-                    @click="showPassword = !showPassword"
-                  />
-                </template>
-              </q-input>
+                <q-input
+                  v-model="form.email"
+                  label="Email"
+                  type="email"
+                  outlined
+                  :rules="[
+                    (val) => !!val || 'L\'email est requis',
+                    (val) =>
+                      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ||
+                      'Email invalide',
+                  ]"
+                  :disable="authStore.loading"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="email" />
+                  </template>
+                </q-input>
 
-              <q-input
-                v-model="form.confirmPassword"
-                label="Confirmer le mot de passe"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                outlined
-                :rules="[
-                  (val) =>
-                    !!val || 'La confirmation du mot de passe est requise',
-                  (val) =>
-                    val === form.password ||
-                    'Les mots de passe ne correspondent pas',
-                ]"
-                :disable="authStore.loading"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="lock" />
-                </template>
-                <template v-slot:append>
-                  <q-icon
-                    :name="
-                      showConfirmPassword ? 'visibility' : 'visibility_off'
-                    "
-                    class="cursor-pointer"
-                    @click="showConfirmPassword = !showConfirmPassword"
-                  />
-                </template>
-              </q-input>
+                <q-input
+                  v-model="form.password"
+                  label="Mot de passe"
+                  :type="showPassword ? 'text' : 'password'"
+                  outlined
+                  :rules="[
+                    (val) => !!val || 'Le mot de passe est requis',
+                    (val) =>
+                      val.length >= 8 ||
+                      'Le mot de passe doit contenir au moins 8 caractères',
+                    (val) =>
+                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(val) ||
+                      'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre',
+                  ]"
+                  :disable="authStore.loading"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="lock" />
+                  </template>
+                  <template v-slot:append>
+                    <q-icon
+                      :name="showPassword ? 'visibility' : 'visibility_off'"
+                      class="cursor-pointer"
+                      @click="showPassword = !showPassword"
+                    />
+                  </template>
+                </q-input>
 
-              <q-select
-                v-model="form.role"
-                :options="roleOptions"
-                option-value="value"
-                option-label="label"
-                emit-value
-                map-options
-                label="Je suis :"
-                outlined
-                :rules="[(val) => !!val || 'Le rôle est requis']"
-                :disable="authStore.loading"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="badge" />
-                </template>
-              </q-select>
+                <q-input
+                  v-model="form.confirmPassword"
+                  label="Confirmer le mot de passe"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+                  outlined
+                  :rules="[
+                    (val) =>
+                      !!val || 'La confirmation du mot de passe est requise',
+                    (val) =>
+                      val === form.password ||
+                      'Les mots de passe ne correspondent pas',
+                  ]"
+                  :disable="authStore.loading"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="lock" />
+                  </template>
+                  <template v-slot:append>
+                    <q-icon
+                      :name="
+                        showConfirmPassword ? 'visibility' : 'visibility_off'
+                      "
+                      class="cursor-pointer"
+                      @click="showConfirmPassword = !showConfirmPassword"
+                    />
+                  </template>
+                </q-input>
 
-              <q-file
-                v-model="form.avatarFile"
-                label="Photo de profil (optionnel)"
-                outlined
-                accept="image/*"
-                max-file-size="5242880"
-                :disable="authStore.loading"
-                @rejected="onFileRejected"
-                @update:model-value="onAvatarFileSelected"
-              >
-                <template v-slot:prepend>
-                  <q-icon name="photo_camera" />
-                </template>
-                <template v-slot:hint>
-                  Formats acceptés: JPG, PNG, GIF (max 5MB)
-                </template>
-              </q-file>
+                <q-select
+                  v-model="form.role"
+                  :options="roleOptions"
+                  option-value="value"
+                  option-label="label"
+                  emit-value
+                  map-options
+                  label="Je suis :"
+                  outlined
+                  :rules="[(val) => !!val || 'Le rôle est requis']"
+                  :disable="authStore.loading"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="badge" />
+                  </template>
+                </q-select>
 
-              <!-- Aperçu de l'avatar sélectionné -->
-              <div v-if="avatarPreview" class="q-mt-md text-center">
-                <div class="text-caption text-grey-6 q-mb-sm">Aperçu :</div>
-                <q-avatar size="80px">
-                  <img :src="avatarPreview" alt="Aperçu avatar" />
-                </q-avatar>
+                <q-file
+                  v-model="form.avatarFile"
+                  label="Photo de profil (optionnel)"
+                  outlined
+                  accept="image/*"
+                  max-file-size="5242880"
+                  :disable="authStore.loading"
+                  @rejected="onFileRejected"
+                  @update:model-value="onAvatarFileSelected"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="photo_camera" />
+                  </template>
+                  <template v-slot:hint>
+                    Formats acceptés: JPG, PNG, GIF (max 5MB)
+                  </template>
+                </q-file>
+
+                <!-- Aperçu de l'avatar sélectionné -->
+                <div v-if="avatarPreview" class="q-mt-md text-center">
+                  <div class="text-caption text-grey-6 q-mb-sm">Aperçu :</div>
+                  <q-avatar size="80px">
+                    <img :src="avatarPreview" alt="Aperçu avatar" />
+                  </q-avatar>
+                </div>
+
+                <q-checkbox
+                  v-model="acceptTerms"
+                  label="J'accepte les conditions d'utilisation"
+                  :disable="authStore.loading"
+                  :rules="[
+                    (val: boolean) =>
+                      val ||
+                      'Vous devez accepter les conditions d\'utilisation',
+                  ]"
+                />
+
+                <q-btn
+                  type="submit"
+                  color="primary"
+                  size="lg"
+                  class="full-width"
+                  :loading="authStore.loading"
+                  :disable="authStore.loading || !acceptTerms"
+                >
+                  <q-spinner-dots v-if="authStore.loading" />
+                  <span v-else>Créer mon compte</span>
+                </q-btn>
+              </q-form>
+            </q-card-section>
+
+            <q-card-section class="text-center">
+              <div class="text-body2 text-grey-6">
+                Déjà un compte ?
+                <q-btn
+                  flat
+                  color="primary"
+                  label="Se connecter"
+                  :disable="authStore.loading"
+                  @click="$router.push('/login')"
+                />
               </div>
-
-              <q-checkbox
-                v-model="acceptTerms"
-                label="J'accepte les conditions d'utilisation"
-                :disable="authStore.loading"
-                :rules="[
-                  (val: boolean) =>
-                    val || 'Vous devez accepter les conditions d\'utilisation',
-                ]"
-              />
-
-              <q-btn
-                type="submit"
-                color="primary"
-                size="lg"
-                class="full-width"
-                :loading="authStore.loading"
-                :disable="authStore.loading || !acceptTerms"
-              >
-                <q-spinner-dots v-if="authStore.loading" />
-                <span v-else>Créer mon compte</span>
-              </q-btn>
-            </q-form>
-          </q-card-section>
-
-          <q-card-section class="text-center">
-            <div class="text-body2 text-grey-6">
-              Déjà un compte ?
-              <q-btn
-                flat
-                color="primary"
-                label="Se connecter"
-                :disable="authStore.loading"
-                @click="$router.push('/login')"
-              />
-            </div>
-          </q-card-section>
-        </q-card>
+            </q-card-section>
+          </q-card>
+        </div>
       </div>
-    </div>
-  </q-page>
+    </PageLayout>
+  </AppLayout>
 </template>
 
 <script setup lang="ts">
@@ -214,6 +221,8 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '../stores/auth'
+import AppLayout from '../components/AppLayout.vue'
+import PageLayout from '../components/PageLayout.vue'
 
 // Composables
 const router = useRouter()
