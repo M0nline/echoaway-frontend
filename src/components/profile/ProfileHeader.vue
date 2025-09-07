@@ -151,7 +151,7 @@ const memberSince = computed(() => {
 
 .profile-date {
   font-size: 0.95rem;
-  color: var(--echoaway-grey);
+  color: var(--echoaway-dark);
 }
 
 .profile-actions {
