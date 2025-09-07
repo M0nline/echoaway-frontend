@@ -1,100 +1,104 @@
 <template>
   <AppLayout>
-    <PageLayout page-class="accommodations-page">
-      <div class="row q-col-gutter-md">
-        <!-- En-tête -->
-        <div class="col-12">
-          <div class="row items-center justify-between q-mb-lg">
-            <div class="text-h3 text-lg-h4 text-md-h5 text-primary">
-              Gestion des Hébergements
+    <PageLayout>
+      <!-- Section en-tête -->
+      <section class="hero-section">
+        <div class="container">
+          <h1 class="hero-title">Gestion des Hébergements</h1>
+          <p class="hero-description">
+            Gérez vos hébergements et découvrez de nouveaux lieux pour vos séjours
+          </p>
+          <q-btn
+            color="primary"
+            icon="add"
+            label="Nouvel hébergement"
+            size="lg"
+            @click="showCreateDialog = true"
+          />
+        </div>
+      </section>
+
+      <!-- Section filtres -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Filtres</h2>
+          </div>
+          <div class="row q-col-gutter-lg">
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-input
+                v-model="filters.search"
+                label="Rechercher un hébergement"
+                outlined
+                clearable
+                @update:model-value="loadAccommodations"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
             </div>
-            <q-btn
-              color="primary"
-              icon="add"
-              label="Nouvel hébergement"
-              size="lg"
-              @click="showCreateDialog = true"
-            />
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-select
+                v-model="filters.connectivity"
+                :options="connectivityOptions"
+                label="Zone de connectivité"
+                outlined
+                clearable
+                @update:model-value="loadAccommodations"
+              />
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-select
+                v-model="filters.type"
+                :options="typeOptions"
+                label="Type d'hébergement"
+                outlined
+                clearable
+                @update:model-value="loadAccommodations"
+              />
+            </div>
+            <div class="col-12 col-lg-3 col-md-6">
+              <q-btn
+                color="primary"
+                icon="refresh"
+                label="Actualiser"
+                @click="loadAccommodations"
+                class="full-width"
+              />
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Filtres -->
-        <div class="col-12">
-          <q-card>
-            <q-card-section>
-              <div class="row q-col-gutter-lg">
-                <div class="col-12 col-lg-3 col-md-6">
-                  <q-input
-                    v-model="filters.search"
-                    label="Rechercher un hébergement"
-                    outlined
-                    clearable
-                    @update:model-value="loadAccommodations"
-                  >
-                    <template v-slot:prepend>
-                      <q-icon name="search" />
-                    </template>
-                  </q-input>
-                </div>
-                <div class="col-12 col-lg-3 col-md-6">
-                  <q-select
-                    v-model="filters.connectivity"
-                    :options="connectivityOptions"
-                    label="Zone de connectivité"
-                    outlined
-                    clearable
-                    @update:model-value="loadAccommodations"
-                  />
-                </div>
-                <div class="col-12 col-lg-3 col-md-6">
-                  <q-select
-                    v-model="filters.type"
-                    :options="typeOptions"
-                    label="Type d'hébergement"
-                    outlined
-                    clearable
-                    @update:model-value="loadAccommodations"
-                  />
-                </div>
-                <div class="col-12 col-lg-3 col-md-6">
-                  <q-btn
-                    color="primary"
-                    icon="refresh"
-                    label="Actualiser"
-                    @click="loadAccommodations"
-                    class="full-width"
-                  />
-                </div>
-              </div>
-            </q-card-section>
-          </q-card>
-        </div>
+      <!-- Section liste des hébergements -->
+      <section class="section-alt">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">Hébergements</h2>
+          </div>
+          
+          <div v-if="loading" class="text-center q-pa-md">
+            <q-spinner-dots size="50px" color="primary" />
+            <div class="q-mt-sm">Chargement...</div>
+          </div>
 
-        <!-- Liste des hébergements -->
-        <div class="col-12">
-          <q-card>
-            <q-card-section>
-              <div v-if="loading" class="text-center q-pa-md">
-                <q-spinner-dots size="50px" color="primary" />
-                <div class="q-mt-sm">Chargement...</div>
-              </div>
+          <div
+            v-else-if="accommodations.length === 0"
+            class="text-center q-pa-md"
+          >
+            <q-icon name="hotel" size="100px" color="grey-4" />
+            <div class="text-h6 text-grey-6 q-mt-md">
+              Aucun hébergement trouvé
+            </div>
+          </div>
 
-              <div
-                v-else-if="accommodations.length === 0"
-                class="text-center q-pa-md"
-              >
-                <q-icon name="hotel" size="100px" color="grey-4" />
-                <div class="text-h6 text-grey-6 q-mt-md">
-                  Aucun hébergement trouvé
-                </div>
-              </div>
-
-              <div v-else class="row q-col-gutter-lg">
-                <div
-                  v-for="accommodation in accommodations"
-                  :key="accommodation.id"
-                  class="col-12 col-xl-3 col-lg-4 col-md-6"
-                >
+          <div v-else class="accommodations-grid">
+            <div
+              v-for="accommodation in accommodations"
+              :key="accommodation.id"
+              class="accommodation-item"
+            >
                   <q-card class="accommodation-card design-system-card">
                     <q-card-section>
                       <div class="text-h6 text-weight-medium">
@@ -168,12 +172,10 @@
                       />
                     </q-card-actions>
                   </q-card>
-                </div>
-              </div>
-            </q-card-section>
-          </q-card>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       <!-- Dialog de création/édition -->
       <AccommodationDialog
@@ -287,7 +289,7 @@ const saveAccommodation = async (formData: any) => {
 
       const accommodationData = {
         ...formData,
-        hostId: parseInt(userData.id),
+        hostId: userData.id,
       }
 
       await apiService.createAccommodation(accommodationData)
