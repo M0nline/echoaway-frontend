@@ -6,7 +6,8 @@
         <div class="container">
           <h1 class="hero-title">Gestion des Hébergements</h1>
           <p class="hero-description">
-            Gérez vos hébergements et découvrez de nouveaux lieux pour vos séjours
+            Gérez vos hébergements et découvrez de nouveaux lieux pour vos
+            séjours
           </p>
           <q-btn
             color="primary"
@@ -77,7 +78,7 @@
           <div class="section-header">
             <h2 class="section-title">Hébergements</h2>
           </div>
-          
+
           <div v-if="loading" class="text-center q-pa-md">
             <q-spinner-dots size="50px" color="primary" />
             <div class="q-mt-sm">Chargement...</div>
@@ -99,79 +100,77 @@
               :key="accommodation.id"
               class="accommodation-item"
             >
-                  <q-card class="accommodation-card design-system-card">
-                    <q-card-section>
-                      <div class="text-h6 text-weight-medium">
-                        {{ accommodation.title }}
-                      </div>
-                      <div class="text-subtitle2 text-grey-6 q-mt-xs">
-                        {{ accommodation.address }},
-                        {{ accommodation.postalCode }} {{ accommodation.city }}
-                      </div>
-                      <div class="q-mt-md">
-                        <q-chip
-                          :color="
-                            getConnectivityColor(accommodation.connectivity)
-                          "
-                          text-color="white"
-                          size="sm"
-                          class="q-mr-xs"
-                        >
-                          {{ accommodation.connectivity }}
-                        </q-chip>
-                        <q-chip color="secondary" text-color="white" size="sm">
-                          {{ accommodation.type }}
-                        </q-chip>
-                        <q-chip
-                          color="info"
-                          text-color="white"
-                          size="sm"
-                          class="q-ml-xs"
-                        >
-                          {{ accommodation.numberOfBeds }} couchages
-                        </q-chip>
-                      </div>
-                      <div
-                        v-if="
-                          accommodation.priceMinPerNight &&
-                          accommodation.priceMaxPerNight
-                        "
-                        class="text-h6 text-primary q-mt-md"
-                      >
-                        {{ accommodation.priceMinPerNight }}€ -
-                        {{ accommodation.priceMaxPerNight }}€ / nuit
-                      </div>
-                      <div
-                        v-else-if="accommodation.priceMinPerNight"
-                        class="text-h6 text-primary q-mt-md"
-                      >
-                        À partir de {{ accommodation.priceMinPerNight }}€ / nuit
-                      </div>
-                      <div
-                        v-if="accommodation.description"
-                        class="text-body2 q-mt-sm text-grey-7"
-                      >
-                        {{ accommodation.description }}
-                      </div>
-                    </q-card-section>
+              <q-card class="accommodation-card design-system-card">
+                <q-card-section>
+                  <div class="text-h6 text-weight-medium">
+                    {{ accommodation.title }}
+                  </div>
+                  <div class="text-subtitle2 text-grey-6 q-mt-xs">
+                    {{ accommodation.address }}, {{ accommodation.postalCode }}
+                    {{ accommodation.city }}
+                  </div>
+                  <div class="q-mt-md">
+                    <q-chip
+                      :color="getConnectivityColor(accommodation.connectivity)"
+                      text-color="white"
+                      size="sm"
+                      class="q-mr-xs"
+                    >
+                      {{ accommodation.connectivity }}
+                    </q-chip>
+                    <q-chip color="secondary" text-color="white" size="sm">
+                      {{ accommodation.type }}
+                    </q-chip>
+                    <q-chip
+                      color="info"
+                      text-color="white"
+                      size="sm"
+                      class="q-ml-xs"
+                    >
+                      {{ accommodation.numberOfBeds }} couchages
+                    </q-chip>
+                  </div>
+                  <div
+                    v-if="
+                      accommodation.priceMinPerNight &&
+                      accommodation.priceMaxPerNight
+                    "
+                    class="text-h6 text-primary q-mt-md"
+                  >
+                    {{ accommodation.priceMinPerNight }}€ -
+                    {{ accommodation.priceMaxPerNight }}€ / nuit
+                  </div>
+                  <div
+                    v-else-if="accommodation.priceMinPerNight"
+                    class="text-h6 text-primary q-mt-md"
+                  >
+                    À partir de {{ accommodation.priceMinPerNight }}€ / nuit
+                  </div>
+                  <div
+                    v-if="accommodation.description"
+                    class="text-body2 q-mt-sm text-grey-7"
+                  >
+                    {{ accommodation.description }}
+                  </div>
+                </q-card-section>
 
-                    <q-card-actions align="right">
-                      <q-btn
-                        flat
-                        color="primary"
-                        icon="edit"
-                        size="sm"
-                        @click="editAccommodation(accommodation)"
-                      />
-                      <q-btn
-                        flat
-                        color="negative"
-                        icon="delete"
-                        size="sm"
-                        @click="deleteAccommodation(accommodation.id)"
-                      />
-                    </q-card-actions>
-                  </q-card>
+                <q-card-actions align="right">
+                  <q-btn
+                    flat
+                    color="primary"
+                    icon="edit"
+                    size="sm"
+                    @click="editAccommodation(accommodation)"
+                  />
+                  <q-btn
+                    flat
+                    color="negative"
+                    icon="delete"
+                    size="sm"
+                    @click="deleteAccommodation(accommodation.id)"
+                  />
+                </q-card-actions>
+              </q-card>
             </div>
           </div>
         </div>

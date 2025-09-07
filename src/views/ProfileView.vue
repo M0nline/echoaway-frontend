@@ -2,20 +2,16 @@
   <AppLayout>
     <PageLayout>
       <!-- En-tête profil -->
-      <ProfileHeader 
-        @edit-profile="handleEditProfile" 
-        @logout="handleLogout" 
-      />
+      <ProfileHeader @edit-profile="handleEditProfile" @logout="handleLogout" />
 
       <!-- Section informations personnelles -->
       <ProfilePersonalInfo />
 
       <!-- Section favoris -->
-      <ProfileFavorites 
+      <ProfileFavorites
         @explore-accommodations="handleExploreAccommodations"
         @view-accommodation="handleViewAccommodation"
       />
-
     </PageLayout>
   </AppLayout>
 </template>
@@ -70,5 +66,4 @@ const handleViewAccommodation = (accommodationId: number) => {
   // TODO: Implémenter la navigation vers les détails de l'hébergement
   router.push(`/accommodations/${accommodationId}`)
 }
-
 </script>

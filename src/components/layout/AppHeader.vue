@@ -14,11 +14,7 @@
         <router-link to="/register" class="echoaway-login-btn">
           S'inscrire
         </router-link>
-        <router-link 
-          v-if="!isLoginPage" 
-          to="/login" 
-          class="echoaway-login-btn"
-        >
+        <router-link v-if="!isLoginPage" to="/login" class="echoaway-login-btn">
           Connexion
         </router-link>
       </div>

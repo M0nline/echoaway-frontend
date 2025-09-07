@@ -5,11 +5,7 @@
         <!-- Avatar -->
         <div class="profile-avatar">
           <q-avatar size="120px" class="profile-avatar-img">
-            <img
-              v-if="user?.avatar"
-              :src="user.avatar"
-              alt="Avatar"
-            />
+            <img v-if="user?.avatar" :src="user.avatar" alt="Avatar" />
             <q-icon v-else name="person" size="80px" color="grey-4" />
           </q-avatar>
         </div>
@@ -64,7 +60,7 @@ import { getRoleLabel } from '../../utils/roleLabels'
 // Props et emits
 defineEmits<{
   'edit-profile': []
-  'logout': []
+  logout: []
 }>()
 
 // Store
@@ -138,7 +134,6 @@ const memberSince = computed(() => {
   line-height: 1.2;
 }
 
-
 .profile-meta {
   display: flex;
   flex-direction: column;
@@ -166,21 +161,21 @@ const memberSince = computed(() => {
   .profile-header {
     padding: 2rem 0;
   }
-  
+
   .profile-header-content {
     flex-direction: column;
     text-align: center;
     gap: 1.5rem;
   }
-  
+
   .profile-name {
     font-size: 2rem;
   }
-  
+
   .profile-meta {
     align-items: center;
   }
-  
+
   .profile-role-chip {
     align-self: center;
   }

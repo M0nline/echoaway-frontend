@@ -26,7 +26,7 @@
                 />
               </div>
             </div>
-            
+
             <!-- Ligne du bas : Email et Mot de passe -->
             <div class="row q-col-gutter-md q-mt-md">
               <div class="col-12 col-sm-6">

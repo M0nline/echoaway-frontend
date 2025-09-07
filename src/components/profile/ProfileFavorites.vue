@@ -15,10 +15,7 @@
       </div>
 
       <!-- Aucun favori -->
-      <div
-        v-else-if="favorites.length === 0"
-        class="text-center q-pa-md"
-      >
+      <div v-else-if="favorites.length === 0" class="text-center q-pa-md">
         <q-icon name="favorite_border" size="100px" color="grey-4" />
         <div class="text-h6 text-grey-6 q-mt-md">
           Aucun favori pour le moment
@@ -50,7 +47,7 @@
                     {{ favorite.accommodation?.title || 'Hébergement' }}
                   </div>
                   <div class="text-subtitle2 text-grey-6 q-mt-xs">
-                    {{ favorite.accommodation?.city || 'Ville' }}, 
+                    {{ favorite.accommodation?.city || 'Ville' }},
                     {{ favorite.accommodation?.postalCode || 'Code postal' }}
                   </div>
                 </div>
@@ -71,20 +68,20 @@
               <div class="row q-col-gutter-sm">
                 <div class="col-12 col-sm-6">
                   <q-chip
-                    :color="getConnectivityColor(favorite.accommodation?.connectivity)"
+                    :color="
+                      getConnectivityColor(favorite.accommodation?.connectivity)
+                    "
                     text-color="white"
                     size="sm"
                     class="q-mr-xs"
                   >
-                    {{ getConnectivityLabel(favorite.accommodation?.connectivity) }}
+                    {{
+                      getConnectivityLabel(favorite.accommodation?.connectivity)
+                    }}
                   </q-chip>
                 </div>
                 <div class="col-12 col-sm-6">
-                  <q-chip
-                    color="primary"
-                    text-color="white"
-                    size="sm"
-                  >
+                  <q-chip color="primary" text-color="white" size="sm">
                     {{ favorite.accommodation?.type || 'Type' }}
                   </q-chip>
                 </div>
@@ -138,7 +135,7 @@ const loadFavorites = async () => {
     // TODO: Implémenter l'appel API pour récupérer les favoris
     // const data = await apiService.getFavorites()
     // favorites.value = data
-    
+
     // Simulation pour le moment
     favorites.value = []
   } catch (error) {
@@ -157,10 +154,10 @@ const removeFavorite = async (favoriteId: number) => {
   try {
     // TODO: Implémenter l'appel API pour supprimer le favori
     // await apiService.removeFavorite(favoriteId)
-    
+
     // Simulation pour le moment
-    favorites.value = favorites.value.filter(f => f.id !== favoriteId)
-    
+    favorites.value = favorites.value.filter((f) => f.id !== favoriteId)
+
     $q.notify({
       type: 'positive',
       message: 'Favori retiré avec succès',
@@ -178,19 +175,27 @@ const removeFavorite = async (favoriteId: number) => {
 
 const getConnectivityColor = (connectivity: string) => {
   switch (connectivity) {
-    case 'white_zone': return 'positive'
-    case 'low_coverage': return 'warning'
-    case 'good_coverage': return 'negative'
-    default: return 'grey'
+    case 'white_zone':
+      return 'positive'
+    case 'low_coverage':
+      return 'warning'
+    case 'good_coverage':
+      return 'negative'
+    default:
+      return 'grey'
   }
 }
 
 const getConnectivityLabel = (connectivity: string) => {
   switch (connectivity) {
-    case 'white_zone': return 'Zone blanche'
-    case 'low_coverage': return 'Faible couverture'
-    case 'good_coverage': return 'Bonne couverture'
-    default: return 'Non spécifié'
+    case 'white_zone':
+      return 'Zone blanche'
+    case 'low_coverage':
+      return 'Faible couverture'
+    case 'good_coverage':
+      return 'Bonne couverture'
+    default:
+      return 'Non spécifié'
   }
 }
 
@@ -214,7 +219,9 @@ onMounted(() => {
 
 .favorite-card {
   height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .favorite-card:hover {
